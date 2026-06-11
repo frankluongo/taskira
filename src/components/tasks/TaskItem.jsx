@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useStore, PRIORITY_LABELS } from '../../lib/store'
+import { useStore, PRIORITY_LABELS } from '@/lib/store'
 import TaskForm from './TaskForm'
 
 export default function TaskItem({ task, subtasks = [] }) {
@@ -46,6 +46,12 @@ export default function TaskItem({ task, subtasks = [] }) {
             </span>
             {task.due_date && (
               <span className="text-xs text-gray-400">{task.due_date}</span>
+            )}
+            {task.alarm_time && (
+              <span className="text-xs text-gray-400 inline-flex items-center gap-0.5">
+                <BellIcon />
+                {formatTime(task.alarm_time)}
+              </span>
             )}
             {subtasks.length > 0 && (
               <button onClick={() => setExpanded((x) => !x)} className="text-xs text-gray-400 hover:text-gray-600">
@@ -118,6 +124,22 @@ export default function TaskItem({ task, subtasks = [] }) {
         </div>
       )}
     </div>
+  )
+}
+
+function formatTime(time) {
+  const [h, m] = time.split(':').map(Number)
+  const suffix = h >= 12 ? 'PM' : 'AM'
+  const hour = h % 12 || 12
+  return `${hour}:${String(m).padStart(2, '0')} ${suffix}`
+}
+
+function BellIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-3 h-3 inline">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    </svg>
   )
 }
 

@@ -1,0 +1,7 @@
+.container {
+  flex: 1 1 0%;
+  padding-inline: 1rem;
+  width: 100%;
+
+  overflow-y: auto;
+}

@@ -1,12 +1,18 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import Today from './pages/Today'
-import Habits from './pages/Habits'
-import Errands from './pages/Errands'
-import Tasks from './pages/Tasks'
-import Login from './pages/Login'
-import { useStore } from './lib/store'
-import { AuthProvider, useAuth } from './lib/auth'
+import Today from '@/pages/Today'
+import Habits from '@/pages/Habits'
+import Errands from '@/pages/Errands'
+import Tasks from '@/pages/Tasks'
+import Login from '@/pages/Login'
+import { useStore } from '@/lib/store'
+import { AuthProvider, useAuth } from '@/lib/auth'
+import {
+  requestNotificationPermission,
+  rescheduleAllErrandNotifications,
+  rescheduleAllHabitNotifications,
+  rescheduleAllTaskNotifications,
+} from '@/lib/notifications'
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth()
@@ -27,12 +33,21 @@ function ProtectedRoute({ children }) {
 }
 
 function AppRoutes() {
-  const { initialize, initialized } = useStore()
+  const { initialize, initialized, errands, habits, tasks } = useStore()
   const { user } = useAuth()
 
   useEffect(() => {
     if (user) initialize()
   }, [user])
+
+  useEffect(() => {
+    if (!initialized) return
+    requestNotificationPermission().then(() => {
+      rescheduleAllErrandNotifications(errands)
+      rescheduleAllHabitNotifications(habits)
+      rescheduleAllTaskNotifications(tasks)
+    })
+  }, [initialized])
 
   if (user && !initialized) {
     return (

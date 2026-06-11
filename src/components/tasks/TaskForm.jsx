@@ -1,21 +1,23 @@
 import { useState } from 'react'
-import { INBOX_PROJECT_ID } from '../../lib/store'
+import { INBOX_PROJECT_ID } from '@/lib/store'
 
 export default function TaskForm({ projects, initialValues = {}, onSubmit, submitLabel = 'Save' }) {
   const [name, setName] = useState(initialValues.name ?? '')
   const [priority, setPriority] = useState(initialValues.priority ?? 3)
   const [projectId, setProjectId] = useState(initialValues.project_id ?? INBOX_PROJECT_ID)
   const [dueDate, setDueDate] = useState(initialValues.due_date ?? '')
+  const [alarmTime, setAlarmTime] = useState(initialValues.alarm_time ?? '')
 
   function handleSubmit(e) {
     e.preventDefault()
     const trimmed = name.trim()
     if (!trimmed) return
-    onSubmit({ name: trimmed, priority, project_id: projectId, due_date: dueDate || null })
+    onSubmit({ name: trimmed, priority, project_id: projectId, due_date: dueDate || null, alarm_time: alarmTime || null })
     setName(initialValues.name ?? '')
     setPriority(initialValues.priority ?? 3)
     setProjectId(initialValues.project_id ?? INBOX_PROJECT_ID)
     setDueDate(initialValues.due_date ?? '')
+    setAlarmTime(initialValues.alarm_time ?? '')
   }
 
   return (
@@ -50,6 +52,12 @@ export default function TaskForm({ projects, initialValues = {}, onSubmit, submi
           type="date"
           value={dueDate}
           onChange={(e) => setDueDate(e.target.value)}
+          className="flex-1 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-2"
+        />
+        <input
+          type="time"
+          value={alarmTime}
+          onChange={(e) => setAlarmTime(e.target.value)}
           className="flex-1 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-2"
         />
       </div>
