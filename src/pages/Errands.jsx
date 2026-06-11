@@ -2,9 +2,10 @@ import { useState } from 'react'
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable'
 import { format, addDays } from 'date-fns'
-import Layout from '../components/layout/Layout'
-import ErrandItem from '../components/errands/ErrandItem'
-import { useStore } from '../lib/store'
+import Layout from '@/components/layout/Layout'
+import ErrandItem from '@/components/errands/ErrandItem'
+import ErrandForm from '@/components/errands/ErrandForm'
+import { useStore } from '@/lib/store'
 
 const fmt = (d) => format(d, 'yyyy-MM-dd')
 const todayStr = () => fmt(new Date())
@@ -13,6 +14,7 @@ const tomorrowStr = () => fmt(addDays(new Date(), 1))
 export default function Errands() {
   const { errands, errand_lists, addErrand, addErrandList, reorderErrands } = useStore()
   const [showForm, setShowForm] = useState(false)
+  const [filterToday, setFilterToday] = useState(false)
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }))
 
   const today = todayStr()
@@ -38,23 +40,33 @@ export default function Errands() {
     <Layout
       title="Errands"
       action={
-        <button onClick={() => setShowForm((x) => !x)} className="text-sm text-indigo-600 dark:text-indigo-400">
-          {showForm ? 'Cancel' : '+ Errand'}
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setFilterToday((x) => !x)}
+            className={`text-sm ${filterToday ? 'text-indigo-600 dark:text-indigo-400 font-medium' : 'text-gray-400 dark:text-gray-500'}`}
+          >
+            Today
+          </button>
+          <button onClick={() => setShowForm((x) => !x)} className="text-sm text-indigo-600 dark:text-indigo-400">
+            {showForm ? 'Cancel' : '+ Errand'}
+          </button>
+        </div>
       }
     >
       {showForm && (
-        <AddErrandForm
-          lists={errand_lists}
-          onAdd={(e) => { addErrand(e); setShowForm(false) }}
-          onAddList={addErrandList}
-        />
+        <div className="mt-4">
+          <ErrandForm
+            onSubmit={(e) => { addErrand(e); setShowForm(false) }}
+            submitLabel="Add Errand"
+            onAddList={addErrandList}
+          />
+        </div>
       )}
 
       <ErrandSection title="Today" items={todayErrands} sensors={sensors} onDragEnd={(e) => handleDragEnd(todayErrands, e)} />
-      <ErrandSection title="Tomorrow" items={tomorrowErrands} sensors={sensors} onDragEnd={(e) => handleDragEnd(tomorrowErrands, e)} />
-      <ErrandSection title="Later" items={laterErrands} sensors={sensors} onDragEnd={(e) => handleDragEnd(laterErrands, e)} showDate />
-      <ErrandSection title="Someday" items={somedayErrands} sensors={sensors} onDragEnd={(e) => handleDragEnd(somedayErrands, e)} />
+      {!filterToday && <ErrandSection title="Tomorrow" items={tomorrowErrands} sensors={sensors} onDragEnd={(e) => handleDragEnd(tomorrowErrands, e)} />}
+      {!filterToday && <ErrandSection title="Later" items={laterErrands} sensors={sensors} onDragEnd={(e) => handleDragEnd(laterErrands, e)} showDate />}
+      {!filterToday && <ErrandSection title="Someday" items={somedayErrands} sensors={sensors} onDragEnd={(e) => handleDragEnd(somedayErrands, e)} />}
     </Layout>
   )
 }
@@ -77,69 +89,5 @@ function ErrandSection({ title, items, sensors, onDragEnd, showDate }) {
         </SortableContext>
       </DndContext>
     </section>
-  )
-}
-
-function AddErrandForm({ lists, onAdd, onAddList }) {
-  const [name, setName] = useState('')
-  const [listId, setListId] = useState('')
-  const [dueDate, setDueDate] = useState('')
-  const [recurrence, setRecurrence] = useState('')
-  const [alarmTime, setAlarmTime] = useState('')
-
-  function handleSubmit(e) {
-    e.preventDefault()
-    const trimmed = name.trim()
-    if (!trimmed) return
-    onAdd({
-      name: trimmed,
-      list_id: listId || null,
-      due_date: dueDate || null,
-      recurrence: recurrence || null,
-      recurrence_day: null,
-      alarm_time: alarmTime || null,
-    })
-    setName('')
-    setDueDate('')
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 flex flex-col gap-3 mt-4">
-      <input
-        autoFocus
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Errand name…"
-        className="bg-white dark:bg-gray-800 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-      />
-      <div className="flex gap-2 flex-wrap">
-        <select value={listId} onChange={(e) => setListId(e.target.value)} className="flex-1 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-2">
-          <option value="">No list</option>
-          {lists.map((l) => <option key={l.id} value={l.id}>{l.name}</option>)}
-        </select>
-        <select value={recurrence} onChange={(e) => setRecurrence(e.target.value)} className="flex-1 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-2">
-          <option value="">No recurrence</option>
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
-          <option value="yearly">Yearly</option>
-        </select>
-      </div>
-      <div className="flex gap-2">
-        <input type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} className="flex-1 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-2" />
-        <input type="time" value={alarmTime} onChange={(e) => setAlarmTime(e.target.value)} className="flex-1 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-2" />
-      </div>
-      <div className="flex gap-2">
-        <button type="submit" className="flex-1 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors">
-          Add Errand
-        </button>
-        <button
-          type="button"
-          onClick={() => { const n = prompt('List name?'); if (n) onAddList(n) }}
-          className="px-3 py-2 text-sm text-indigo-600 dark:text-indigo-400 border border-indigo-300 dark:border-indigo-700 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors"
-        >
-          + List
-        </button>
-      </div>
-    </form>
   )
 }

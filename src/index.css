@@ -2,6 +2,46 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer variables {
+  :root {
+    --color-primary: hsl(208, 37%, 48%);
+
+    --color-black: hsl(210, 20%, 5%);
+    --color-gray-darkest: hsl(211, 53%, 8%);
+    --color-gray-darker: hsl(211, 53%, 12%);
+    --color-gray-dark: hsl(211, 53%, 16%);
+    --color-gray-light: hsl(90, 7%, 86%);
+    --color-gray-lighter: hsl(90, 7%, 90%);
+    --color-gray-lightest: hsl(90, 7%, 94%);
+    --color-white: hsl(0, 0%, 100%);
+
+    --font-primary: "Manrope", sans-serif;
+    --font-secondary: "Teko", sans-serif;
+  }
+}
+
+@layer theme {
+  :root {
+    --theme-color-background-tint-03: var(--color-gray-light);
+    --theme-color-background-tint-02: var(--color-gray-lighter);
+    --theme-color-background-tint-01: var(--color-gray-lightest);
+    --theme-color-background-default: var(--color-white);
+
+    --theme-color-border-default: var(--color-gray-lightest);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --theme-color-background-tint-03: var(--color-gray-dark);
+      --theme-color-background-tint-02: var(--color-gray-darker);
+      --theme-color-background-tint-01: var(--color-gray-darkest);
+      --theme-color-background-default: var(--color-black);
+
+      --theme-color-border-default: var(--color-gray-darkest);
+    }
+  }
+}
+
 @layer utilities {
   .pt-safe {
     padding-top: calc(env(safe-area-inset-top) + 1rem);
@@ -16,8 +56,19 @@
   body,
   #root {
     height: 100dvh;
+
+    font-family: var(--font-primary);
   }
   body {
     @apply bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100;
+  }
+
+  body {
+    background-color: var(--theme-color-background-default);
+  }
+
+  #root {
+    display: flex;
+    flex-direction: column;
   }
 }

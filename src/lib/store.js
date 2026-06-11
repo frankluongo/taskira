@@ -1,6 +1,11 @@
 import { create } from 'zustand'
-import { addWeeks, addMonths, addYears, format } from 'date-fns'
+import { addDays, addWeeks, addMonths, addYears, format } from 'date-fns'
 import { supabase } from './supabase'
+import {
+  scheduleErrandNotification, cancelErrandNotification,
+  scheduleHabitNotification, cancelHabitNotification,
+  scheduleTaskNotification, cancelTaskNotification,
+} from './notifications'
 
 export const INBOX_PROJECT_ID = '00000000-0000-0000-0000-000000000001'
 
@@ -12,7 +17,17 @@ function nextRecurrenceDate(errand) {
     case 'weekly':  return format(addWeeks(base, 1), 'yyyy-MM-dd')
     case 'monthly': return format(addMonths(base, 1), 'yyyy-MM-dd')
     case 'yearly':  return format(addYears(base, 1), 'yyyy-MM-dd')
-    default:        return null
+    default: {
+      if (errand.recurrence?.startsWith('custom:')) {
+        const [, n, unit] = errand.recurrence.split(':')
+        const count = parseInt(n, 10)
+        if (unit === 'days')   return format(addDays(base, count), 'yyyy-MM-dd')
+        if (unit === 'weeks')  return format(addWeeks(base, count), 'yyyy-MM-dd')
+        if (unit === 'months') return format(addMonths(base, count), 'yyyy-MM-dd')
+        if (unit === 'years')  return format(addYears(base, count), 'yyyy-MM-dd')
+      }
+      return null
+    }
   }
 }
 
@@ -57,11 +72,17 @@ export const useStore = create((set, get) => ({
     const row = { id: crypto.randomUUID(), sort_order: get().habits.length, ...habit }
     set((s) => ({ habits: [...s.habits, row] }))
     await supabase.from('habits').insert(row)
+    scheduleHabitNotification(row)
   },
 
   updateHabit: async (id, patch) => {
     set((s) => ({ habits: s.habits.map((h) => h.id === id ? { ...h, ...patch } : h) }))
     await supabase.from('habits').update(patch).eq('id', id)
+    const updated = get().habits.find((h) => h.id === id)
+    if (updated) {
+      await cancelHabitNotification(id)
+      scheduleHabitNotification(updated)
+    }
   },
 
   deleteHabit: async (id) => {
@@ -70,6 +91,7 @@ export const useStore = create((set, get) => ({
       habit_completions: s.habit_completions.filter((c) => c.habit_id !== id),
     }))
     await supabase.from('habits').delete().eq('id', id)
+    cancelHabitNotification(id)
   },
 
   reorderHabits: async (ordered) => {
@@ -128,16 +150,23 @@ export const useStore = create((set, get) => ({
     const row = { id: crypto.randomUUID(), sort_order: get().errands.length, created_at: new Date().toISOString(), ...errand }
     set((s) => ({ errands: [...s.errands, row] }))
     await supabase.from('errands').insert(row)
+    scheduleErrandNotification(row)
   },
 
   updateErrand: async (id, patch) => {
     set((s) => ({ errands: s.errands.map((e) => e.id === id ? { ...e, ...patch } : e) }))
     await supabase.from('errands').update(patch).eq('id', id)
+    const updated = get().errands.find((e) => e.id === id)
+    if (updated) {
+      await cancelErrandNotification(id)
+      scheduleErrandNotification(updated)
+    }
   },
 
   deleteErrand: async (id) => {
     set((s) => ({ errands: s.errands.filter((e) => e.id !== id) }))
     await supabase.from('errands').delete().eq('id', id)
+    cancelErrandNotification(id)
   },
 
   reorderErrands: async (ordered) => {
@@ -152,9 +181,13 @@ export const useStore = create((set, get) => ({
       const nextDate = nextRecurrenceDate(errand)
       set((s) => ({ errands: s.errands.map((e) => e.id === id ? { ...e, due_date: nextDate } : e) }))
       await supabase.from('errands').update({ due_date: nextDate }).eq('id', id)
+      await cancelErrandNotification(id)
+      const updated = get().errands.find((e) => e.id === id)
+      if (updated) scheduleErrandNotification(updated)
     } else {
       set((s) => ({ errands: s.errands.filter((e) => e.id !== id) }))
       await supabase.from('errands').delete().eq('id', id)
+      cancelErrandNotification(id)
     }
   },
 
@@ -163,6 +196,11 @@ export const useStore = create((set, get) => ({
     const row = { id: crypto.randomUUID(), name, sort_order: get().projects.length }
     set((s) => ({ projects: [...s.projects, row] }))
     await supabase.from('projects').insert(row)
+  },
+
+  updateProject: async (id, patch) => {
+    set((s) => ({ projects: s.projects.map((p) => p.id === id ? { ...p, ...patch } : p) }))
+    await supabase.from('projects').update(patch).eq('id', id)
   },
 
   deleteProject: async (id) => {
@@ -178,16 +216,23 @@ export const useStore = create((set, get) => ({
     const row = { id: crypto.randomUUID(), sort_order: get().tasks.length, parent_task_id: null, ...task }
     set((s) => ({ tasks: [...s.tasks, row] }))
     await supabase.from('tasks').insert(row)
+    scheduleTaskNotification(row)
   },
 
   updateTask: async (id, patch) => {
     set((s) => ({ tasks: s.tasks.map((t) => t.id === id ? { ...t, ...patch } : t) }))
     await supabase.from('tasks').update(patch).eq('id', id)
+    const updated = get().tasks.find((t) => t.id === id)
+    if (updated) {
+      await cancelTaskNotification(id)
+      scheduleTaskNotification(updated)
+    }
   },
 
   deleteTask: async (id) => {
     set((s) => ({ tasks: s.tasks.filter((t) => t.id !== id && t.parent_task_id !== id) }))
     await supabase.from('tasks').delete().eq('id', id)
+    cancelTaskNotification(id)
   },
 
   reorderTasks: async (ordered) => {
@@ -198,6 +243,7 @@ export const useStore = create((set, get) => ({
   completeTask: async (id) => {
     set((s) => ({ tasks: s.tasks.filter((t) => t.id !== id && t.parent_task_id !== id) }))
     await supabase.from('tasks').delete().eq('id', id)
+    cancelTaskNotification(id)
   },
 }))
 
