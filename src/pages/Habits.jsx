@@ -12,9 +12,11 @@ import {
   arrayMove,
 } from "@dnd-kit/sortable";
 import Layout from "@/components/layout/Layout";
-import HabitItem from "@/components/habits/HabitItem";
-import HabitForm from "@/components/habits/HabitForm";
+
+import { HabitForm, HabitItem } from "@/features";
+
 import { useStore } from "@/lib/store";
+import { Button, Float, IconPlus, Modal } from "@/base";
 
 const GROUPS = ["AM", "Misc", "PM"];
 
@@ -31,18 +33,6 @@ export default function Habits() {
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
   );
-
-  function handleDragEnd(group, { active, over }) {
-    if (!over || active.id === over.id) return;
-    const groupHabits = habits.filter((h) => h.group_name === group);
-    const oldIdx = groupHabits.findIndex((h) => h.id === active.id);
-    const newIdx = groupHabits.findIndex((h) => h.id === over.id);
-    const reordered = arrayMove(groupHabits, oldIdx, newIdx).map((h, i) => ({
-      ...h,
-      sort_order: i,
-    }));
-    reorderHabits(habits.map((h) => reordered.find((r) => r.id === h.id) || h));
-  }
 
   return (
     <Layout
@@ -61,23 +51,22 @@ export default function Habits() {
           >
             {showCompleted ? "Hide done" : "Show done"}
           </button>
-          <button
-            onClick={() => setShowForm((x) => !x)}
-            className="text-sm text-indigo-600 dark:text-indigo-400"
-          >
-            {showForm ? "Cancel" : "+ Habit"}
-          </button>
         </div>
       }
     >
-      {showForm && (
-        <AddHabitForm
-          onAdd={(habit) => {
+      <Modal
+        open={showForm}
+        onClose={() => setShowForm(false)}
+        title="Add Habit"
+      >
+        <HabitForm
+          onSubmit={(habit) => {
             addHabit(habit);
             setShowForm(false);
           }}
+          submitLabel="Add Habit"
         />
-      )}
+      </Modal>
 
       {GROUPS.map((group) => {
         const allGroupHabits = habits
@@ -90,7 +79,7 @@ export default function Habits() {
           : allGroupHabits.filter((h) => !isHabitDoneToday(h.id));
         const isCollapsed = collapsed[group];
         return (
-          <section key={group} className="mt-6">
+          <section key={group}>
             <button
               onClick={() =>
                 setCollapsed((prev) => ({ ...prev, [group]: !prev[group] }))
@@ -138,14 +127,28 @@ export default function Habits() {
           </section>
         );
       })}
+      <Float>
+        <Button
+          variant="icon"
+          aria-expanded={showForm}
+          aria-label="Add Habit"
+          onClick={() => setShowForm((x) => !x)}
+        >
+          <IconPlus />
+        </Button>
+      </Float>
     </Layout>
   );
-}
 
-function AddHabitForm({ onAdd }) {
-  return (
-    <div className="mt-4">
-      <HabitForm onSubmit={onAdd} submitLabel="Add Habit" />
-    </div>
-  );
+  function handleDragEnd(group, { active, over }) {
+    if (!over || active.id === over.id) return;
+    const groupHabits = habits.filter((h) => h.group_name === group);
+    const oldIdx = groupHabits.findIndex((h) => h.id === active.id);
+    const newIdx = groupHabits.findIndex((h) => h.id === over.id);
+    const reordered = arrayMove(groupHabits, oldIdx, newIdx).map((h, i) => ({
+      ...h,
+      sort_order: i,
+    }));
+    reorderHabits(habits.map((h) => reordered.find((r) => r.id === h.id) || h));
+  }
 }

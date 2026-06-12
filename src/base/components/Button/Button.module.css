@@ -1,9 +1,86 @@
 .button {
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
   transition:
     background-color 150ms ease-in-out,
     border-color 150ms ease-in-out;
 }
+/* ============================================================== */
+/* ICON: START */
+/* #region */
+.button.icon {
+  --size: 2.5rem;
+  --icon-size: 1rem;
 
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: var(--size);
+  width: var(--size);
+
+  color: var(--color-white);
+
+  background-color: var(--color-primary-500);
+  border-radius: 50%;
+}
+
+.button.icon.slim {
+  --icon-size: 0.75rem;
+  --size: 1.5rem;
+}
+
+@media (hover: hover) {
+  .button.icon {
+    background-color: var(--color-primary-100);
+  }
+
+  .button.icon:hover {
+    background-color: var(--color-primary-500);
+  }
+}
+
+.button.icon svg {
+  height: var(--icon-size);
+  width: var(--icon-size);
+
+  transition: transform 150ms ease-in-out;
+}
+
+.button.icon[aria-expanded="true"] svg {
+  transform: rotate(45deg);
+}
+/* #endregion */
+/* ICON: END */
+/* ============================================================== */
+/* PRIMARY: START */
+/* #region */
+.button.primary {
+  padding: 0.5rem 1rem;
+
+  color: var(--color-white);
+  font-weight: 700;
+
+  background-color: var(--color-primary-500);
+  border: 1px solid var(--color-primary-700);
+  border-radius: 0.5rem;
+}
+
+@media (hover: hover) {
+  .button.primary {
+    background-color: var(--color-primary-600);
+  }
+
+  .button.primary:hover {
+    background-color: var(--color-primary-500);
+  }
+}
+/* #endregion */
+/* PRIMARY: END */
+/* ============================================================== */
+/* TOGGLE: START */
+/* #region */
 .button.toggle {
   --size: 1.5rem;
 
@@ -16,7 +93,7 @@
   color: var(--color-white);
 
   border-radius: 50%;
-  border: 1px solid var(--color-primary);
+  border: 1px solid var(--color-primary-500);
 }
 
 .button.toggle .toggleIndicator {
@@ -25,9 +102,11 @@
 }
 
 .button.toggle.active {
-  background-color: var(--color-primary);
+  background-color: var(--color-primary-500);
 }
 
 .button.toggle.active .toggleIndicator {
   opacity: 1;
 }
+/* #endregion */
+/* TOGGLE: END */

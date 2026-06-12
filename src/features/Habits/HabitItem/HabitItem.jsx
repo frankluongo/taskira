@@ -3,8 +3,8 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useStore } from "@/lib/store";
 import { formatTime } from "@/lib/date";
-import HabitForm from "./HabitForm";
-import { ToggleButton } from "@/base/components";
+import { HabitForm } from "../HabitForm/HabitForm";
+import { Button, Modal, ToggleButton } from "@/base/components";
 
 const RECURRENCE_LABELS = {
   daily: "Daily",
@@ -14,7 +14,7 @@ const RECURRENCE_LABELS = {
   specific_days: "Specific days",
 };
 
-export default function HabitItem({ habit }) {
+export function HabitItem({ habit }) {
   const {
     completeHabit,
     uncompleteHabit,
@@ -75,50 +75,29 @@ export default function HabitItem({ habit }) {
         </div>
 
         <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-          <button
-            onClick={() => setShowEditModal(true)}
-            className="text-gray-300 hover:text-indigo-500"
-          >
+          <Button onClick={() => setShowEditModal(true)} variant="icon">
             <EditIcon />
-          </button>
-          <button
-            onClick={() => deleteHabit(habit.id)}
-            className="text-gray-300 hover:text-red-500"
-          >
+          </Button>
+          <Button onClick={() => deleteHabit(habit.id)} variant="icon">
             <TrashIcon />
-          </button>
+          </Button>
         </div>
       </div>
 
-      {showEditModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-          onClick={() => setShowEditModal(false)}
-        >
-          <div
-            className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-md mx-4 shadow-xl overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between px-4 pt-4 pb-2">
-              <h2 className="text-base font-semibold">Edit Habit</h2>
-              <button
-                onClick={() => setShowEditModal(false)}
-                className="text-gray-400 hover:text-gray-600 text-xl leading-none"
-              >
-                ✕
-              </button>
-            </div>
-            <HabitForm
-              initialValues={habit}
-              onSubmit={(patch) => {
-                updateHabit(habit.id, patch);
-                setShowEditModal(false);
-              }}
-              submitLabel="Save Changes"
-            />
-          </div>
-        </div>
-      )}
+      <Modal
+        open={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        title="Edit Habit"
+      >
+        <HabitForm
+          initialValues={habit}
+          onSubmit={(patch) => {
+            updateHabit(habit.id, patch);
+            setShowEditModal(false);
+          }}
+          submitLabel="Save Changes"
+        />
+      </Modal>
     </div>
   );
 }
