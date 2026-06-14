@@ -1,6 +1,5 @@
 import { Container, Header, Main } from "@/base";
-
-import BottomNav from "./BottomNav";
+import { AppNavigation } from "@/features";
 import { supabase } from "@/lib/supabase";
 
 export default function Layout({ title, action, children }) {
@@ -26,7 +25,7 @@ export default function Layout({ title, action, children }) {
         </Header>
         <Container>{children}</Container>
       </Main>
-      <BottomNav />
+      <AppNavigation />
     </>
   );
 }

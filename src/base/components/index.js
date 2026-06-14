@@ -4,6 +4,7 @@ export * from "./Float/Float";
 export * from "./Footer/Footer";
 export * from "./Form/Form";
 export * from "./Header/Header";
+export * from "./Hyperlink/Hyperlink";
 export * from "./Input/Input";
 export * from "./Main/Main";
 export * from "./Modal/Modal";

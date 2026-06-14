@@ -6,6 +6,8 @@ import { formatTime } from "@/lib/date";
 import { HabitForm } from "../HabitForm/HabitForm";
 import { Button, Modal, ToggleButton } from "@/base/components";
 
+import css from "./HabitItem.module.css";
+
 const RECURRENCE_LABELS = {
   daily: "Daily",
   every_other_day: "Every other day",
@@ -14,7 +16,7 @@ const RECURRENCE_LABELS = {
   specific_days: "Specific days",
 };
 
-export function HabitItem({ habit }) {
+export function HabitItem({ habit, dragMode = false }) {
   const {
     completeHabit,
     uncompleteHabit,
@@ -45,15 +47,17 @@ export function HabitItem({ habit }) {
   }
 
   return (
-    <div ref={setNodeRef} style={style} className="group">
+    <div ref={setNodeRef} style={style} className={css.item}>
       <div className="flex items-center gap-3 py-3">
-        <button
-          {...attributes}
-          {...listeners}
-          className="cursor-grab touch-none text-gray-300 dark:text-gray-700 hover:text-gray-400 shrink-0"
-        >
-          <GripIcon />
-        </button>
+        {dragMode && (
+          <button
+            {...attributes}
+            {...listeners}
+            className="cursor-grab touch-none text-gray-300 dark:text-gray-700 hover:text-gray-400 shrink-0"
+          >
+            <GripIcon />
+          </button>
+        )}
 
         <ToggleButton active={done} onClick={toggle} />
 
@@ -74,11 +78,17 @@ export function HabitItem({ habit }) {
           </p>
         </div>
 
-        <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-          <Button onClick={() => setShowEditModal(true)} variant="icon">
+        <div className={css.actions}>
+          <Button
+            onClick={() => setShowEditModal(true)}
+            variant="icon secondary slim"
+          >
             <EditIcon />
           </Button>
-          <Button onClick={() => deleteHabit(habit.id)} variant="icon">
+          <Button
+            onClick={() => deleteHabit(habit.id)}
+            variant="icon secondary slim"
+          >
             <TrashIcon />
           </Button>
         </div>

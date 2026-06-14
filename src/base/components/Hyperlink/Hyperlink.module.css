@@ -1,0 +1,31 @@
+.link {
+  text-decoration: none;
+}
+
+.link.navigation {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.25rem;
+  padding-block: 0.75rem;
+
+  color: var(--theme-color-text-muted);
+  font-size: 0.75rem;
+
+  transition: color 150ms ease;
+}
+
+.link.navigation[class*="active"] {
+  color: var(--color-primary-500);
+}
+
+.link.navigation svg {
+  height: 1.5rem;
+}
+
+@media (hover: hover) {
+  .link.navigation:hover {
+    color: var(--color-primary-500);
+  }
+}

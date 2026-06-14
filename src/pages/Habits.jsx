@@ -16,7 +16,15 @@ import Layout from "@/components/layout/Layout";
 import { HabitForm, HabitItem } from "@/features";
 
 import { useStore } from "@/lib/store";
-import { Button, Float, IconPlus, Modal } from "@/base";
+import {
+  Button,
+  Float,
+  IconCalendar,
+  IconCheckmark,
+  IconDrag,
+  IconPlus,
+  Modal,
+} from "@/base";
 
 const GROUPS = ["AM", "Misc", "PM"];
 
@@ -27,6 +35,7 @@ export default function Habits() {
   const [showCompleted, setShowCompleted] = useState(false);
   const [filterToday, setFilterToday] = useState(true);
   const [collapsed, setCollapsed] = useState({});
+  const [dragMode, setDragMode] = useState(false);
   const todayHabitIds = filterToday
     ? new Set(habitsDueToday().map((h) => h.id))
     : null;
@@ -39,35 +48,33 @@ export default function Habits() {
       title="Habits"
       action={
         <div className="flex items-center gap-3">
-          <button
+          <Button
+            aria-label="Toggle filter today"
+            aria-pressed={filterToday}
             onClick={() => setFilterToday((x) => !x)}
-            className={`text-sm ${filterToday ? "text-indigo-600 dark:text-indigo-400 font-medium" : "text-gray-400 dark:text-gray-500"}`}
+            variant="icon slim secondary"
           >
-            Today
-          </button>
-          <button
+            <IconCalendar />
+          </Button>
+          <Button
+            aria-label="Toggle show completed habits"
+            aria-pressed={showCompleted}
             onClick={() => setShowCompleted((x) => !x)}
-            className="text-sm text-gray-400 dark:text-gray-500"
+            variant="icon slim secondary"
           >
-            {showCompleted ? "Hide done" : "Show done"}
-          </button>
+            <IconCheckmark />
+          </Button>
+          <Button
+            aria-label="Toggle drag mode"
+            aria-pressed={dragMode}
+            onClick={() => setDragMode((x) => !x)}
+            variant="icon slim secondary"
+          >
+            <IconDrag />
+          </Button>
         </div>
       }
     >
-      <Modal
-        open={showForm}
-        onClose={() => setShowForm(false)}
-        title="Add Habit"
-      >
-        <HabitForm
-          onSubmit={(habit) => {
-            addHabit(habit);
-            setShowForm(false);
-          }}
-          submitLabel="Add Habit"
-        />
-      </Modal>
-
       {GROUPS.map((group) => {
         const allGroupHabits = habits
           .filter((h) => h.group_name === group)
@@ -112,7 +119,11 @@ export default function Habits() {
                   >
                     <div className="divide-y divide-gray-100 dark:divide-gray-800">
                       {visibleHabits.map((habit) => (
-                        <HabitItem key={habit.id} habit={habit} />
+                        <HabitItem
+                          key={habit.id}
+                          habit={habit}
+                          dragMode={dragMode}
+                        />
                       ))}
                     </div>
                   </SortableContext>
@@ -137,6 +148,19 @@ export default function Habits() {
           <IconPlus />
         </Button>
       </Float>
+      <Modal
+        open={showForm}
+        onClose={() => setShowForm(false)}
+        title="Add Habit"
+      >
+        <HabitForm
+          onSubmit={(habit) => {
+            addHabit(habit);
+            setShowForm(false);
+          }}
+          submitLabel="Add Habit"
+        />
+      </Modal>
     </Layout>
   );
 

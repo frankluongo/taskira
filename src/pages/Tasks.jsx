@@ -15,6 +15,7 @@ import { getTodayString } from "@/lib/date";
 import Layout from "@/components/layout/Layout";
 import { TaskItem, TaskForm } from "@/features";
 import { useStore, INBOX_PROJECT_ID } from "@/lib/store";
+import { Button, Float, IconPlus, Modal } from "@/base";
 
 export default function Tasks() {
   const { tasks, projects, addTask, reorderTasks, updateProject } = useStore();
@@ -77,12 +78,6 @@ export default function Tasks() {
             className={`text-sm ${filterToday ? "text-indigo-600 dark:text-indigo-400 font-medium" : "text-gray-400 dark:text-gray-500"}`}
           >
             Today
-          </button>
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="text-sm text-indigo-600 dark:text-indigo-400"
-          >
-            + Task
           </button>
         </div>
       }
@@ -175,37 +170,32 @@ export default function Tasks() {
       )}
 
       {/* Add task modal */}
-      {showAddModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-          onClick={() => setShowAddModal(false)}
+      <Modal
+        open={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        title="Add Task"
+      >
+        <TaskForm
+          projects={projects}
+          initialValues={{
+            priority: 3,
+            project_id:
+              activeProject !== "all" ? activeProject : INBOX_PROJECT_ID,
+          }}
+          onSubmit={handleAddTask}
+          submitLabel="Add Task"
+        />
+      </Modal>
+      <Float>
+        <Button
+          variant="icon"
+          aria-expanded={showAddModal}
+          aria-label="Add Task"
+          onClick={() => setShowAddModal((x) => !x)}
         >
-          <div
-            className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-md mx-4 shadow-xl overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between px-4 pt-4 pb-2">
-              <h2 className="text-base font-semibold">New Task</h2>
-              <button
-                onClick={() => setShowAddModal(false)}
-                className="text-gray-400 hover:text-gray-600 text-xl leading-none"
-              >
-                ✕
-              </button>
-            </div>
-            <TaskForm
-              projects={projects}
-              initialValues={{
-                priority: 3,
-                project_id:
-                  activeProject !== "all" ? activeProject : INBOX_PROJECT_ID,
-              }}
-              onSubmit={handleAddTask}
-              submitLabel="Add Task"
-            />
-          </div>
-        </div>
-      )}
+          <IconPlus />
+        </Button>
+      </Float>
     </Layout>
   );
 }

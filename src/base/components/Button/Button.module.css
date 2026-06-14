@@ -5,7 +5,8 @@
   cursor: pointer;
   transition:
     background-color 150ms ease-in-out,
-    border-color 150ms ease-in-out;
+    border-color 150ms ease-in-out,
+    opacity 150ms ease-in-out;
 }
 /* ============================================================== */
 /* ICON: START */
@@ -24,6 +25,19 @@
 
   background-color: var(--color-primary-500);
   border-radius: 50%;
+}
+
+.button.icon[aria-pressed="false"] {
+  opacity: 0.5;
+}
+
+.button.icon.secondary {
+  background-color: transparent;
+  border: 1px solid var(--color-primary-500);
+}
+
+.button.icon.secondary[aria-pressed="true"] {
+  background-color: var(--color-primary-500);
 }
 
 .button.icon.slim {
