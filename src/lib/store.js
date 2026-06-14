@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { addDays, addWeeks, addMonths, addYears, format } from 'date-fns'
 import { supabase } from './supabase'
 import {
-  scheduleErrandNotification, cancelErrandNotification,
+  scheduleChoreNotification, cancelChoreNotification,
   scheduleHabitNotification, cancelHabitNotification,
   scheduleTaskNotification, cancelTaskNotification,
 } from './notifications'
@@ -11,15 +11,15 @@ export const INBOX_PROJECT_ID = '00000000-0000-0000-0000-000000000001'
 
 const today = () => format(new Date(), 'yyyy-MM-dd')
 
-function nextRecurrenceDate(errand) {
-  const base = new Date(errand.due_date)
-  switch (errand.recurrence) {
+function nextRecurrenceDate(chore) {
+  const base = new Date(chore.due_date)
+  switch (chore.recurrence) {
     case 'weekly':  return format(addWeeks(base, 1), 'yyyy-MM-dd')
     case 'monthly': return format(addMonths(base, 1), 'yyyy-MM-dd')
     case 'yearly':  return format(addYears(base, 1), 'yyyy-MM-dd')
     default: {
-      if (errand.recurrence?.startsWith('custom:')) {
-        const [, n, unit] = errand.recurrence.split(':')
+      if (chore.recurrence?.startsWith('custom:')) {
+        const [, n, unit] = chore.recurrence.split(':')
         const count = parseInt(n, 10)
         if (unit === 'days')   return format(addDays(base, count), 'yyyy-MM-dd')
         if (unit === 'weeks')  return format(addWeeks(base, count), 'yyyy-MM-dd')
@@ -34,8 +34,8 @@ function nextRecurrenceDate(errand) {
 export const useStore = create((set, get) => ({
   habits: [],
   habit_completions: [],
-  errand_lists: [],
-  errands: [],
+  chore_lists: [],
+  chores: [],
   projects: [],
   tasks: [],
   initialized: false,
@@ -44,23 +44,23 @@ export const useStore = create((set, get) => ({
     const [
       { data: habits },
       { data: habit_completions },
-      { data: errand_lists },
-      { data: errands },
+      { data: chore_lists },
+      { data: chores },
       { data: projects },
       { data: tasks },
     ] = await Promise.all([
       supabase.from('habits').select('*').order('sort_order'),
       supabase.from('habit_completions').select('*').eq('completed_on', today()),
-      supabase.from('errand_lists').select('*').order('sort_order'),
-      supabase.from('errands').select('*').order('sort_order'),
+      supabase.from('chore_lists').select('*').order('sort_order'),
+      supabase.from('chores').select('*').order('sort_order'),
       supabase.from('projects').select('*').order('sort_order'),
       supabase.from('tasks').select('*').order('sort_order'),
     ])
     set({
       habits: habits || [],
       habit_completions: habit_completions || [],
-      errand_lists: errand_lists || [],
-      errands: errands || [],
+      chore_lists: chore_lists || [],
+      chores: chores || [],
       projects: projects || [],
       tasks: tasks || [],
       initialized: true,
@@ -133,61 +133,61 @@ export const useStore = create((set, get) => ({
     })
   },
 
-  // ── Errand Lists ─────────────────────────────────────────────────────
-  addErrandList: async (name) => {
-    const row = { id: crypto.randomUUID(), name, sort_order: get().errand_lists.length }
-    set((s) => ({ errand_lists: [...s.errand_lists, row] }))
-    await supabase.from('errand_lists').insert(row)
+  // ── Chore Lists ─────────────────────────────────────────────────────
+  addChoreList: async (name) => {
+    const row = { id: crypto.randomUUID(), name, sort_order: get().chore_lists.length }
+    set((s) => ({ chore_lists: [...s.chore_lists, row] }))
+    await supabase.from('chore_lists').insert(row)
   },
 
-  deleteErrandList: async (id) => {
-    set((s) => ({ errand_lists: s.errand_lists.filter((l) => l.id !== id) }))
-    await supabase.from('errand_lists').delete().eq('id', id)
+  deleteChoreList: async (id) => {
+    set((s) => ({ chore_lists: s.chore_lists.filter((l) => l.id !== id) }))
+    await supabase.from('chore_lists').delete().eq('id', id)
   },
 
-  // ── Errands ───────────────────────────────────────────────────────────
-  addErrand: async (errand) => {
-    const row = { id: crypto.randomUUID(), sort_order: get().errands.length, created_at: new Date().toISOString(), ...errand }
-    set((s) => ({ errands: [...s.errands, row] }))
-    await supabase.from('errands').insert(row)
-    scheduleErrandNotification(row)
+  // ── Chores ───────────────────────────────────────────────────────────
+  addChore: async (chore) => {
+    const row = { id: crypto.randomUUID(), sort_order: get().chores.length, created_at: new Date().toISOString(), ...chore }
+    set((s) => ({ chores: [...s.chores, row] }))
+    await supabase.from('chores').insert(row)
+    scheduleChoreNotification(row)
   },
 
-  updateErrand: async (id, patch) => {
-    set((s) => ({ errands: s.errands.map((e) => e.id === id ? { ...e, ...patch } : e) }))
-    await supabase.from('errands').update(patch).eq('id', id)
-    const updated = get().errands.find((e) => e.id === id)
+  updateChore: async (id, patch) => {
+    set((s) => ({ chores: s.chores.map((e) => e.id === id ? { ...e, ...patch } : e) }))
+    await supabase.from('chores').update(patch).eq('id', id)
+    const updated = get().chores.find((e) => e.id === id)
     if (updated) {
-      await cancelErrandNotification(id)
-      scheduleErrandNotification(updated)
+      await cancelChoreNotification(id)
+      scheduleChoreNotification(updated)
     }
   },
 
-  deleteErrand: async (id) => {
-    set((s) => ({ errands: s.errands.filter((e) => e.id !== id) }))
-    await supabase.from('errands').delete().eq('id', id)
-    cancelErrandNotification(id)
+  deleteChore: async (id) => {
+    set((s) => ({ chores: s.chores.filter((e) => e.id !== id) }))
+    await supabase.from('chores').delete().eq('id', id)
+    cancelChoreNotification(id)
   },
 
-  reorderErrands: async (ordered) => {
-    set({ errands: ordered })
-    await Promise.all(ordered.map((e) => supabase.from('errands').update({ sort_order: e.sort_order }).eq('id', e.id)))
+  reorderChores: async (ordered) => {
+    set({ chores: ordered })
+    await Promise.all(ordered.map((e) => supabase.from('chores').update({ sort_order: e.sort_order }).eq('id', e.id)))
   },
 
-  completeErrand: async (id) => {
-    const errand = get().errands.find((e) => e.id === id)
-    if (!errand) return
-    if (errand.recurrence && errand.due_date) {
-      const nextDate = nextRecurrenceDate(errand)
-      set((s) => ({ errands: s.errands.map((e) => e.id === id ? { ...e, due_date: nextDate } : e) }))
-      await supabase.from('errands').update({ due_date: nextDate }).eq('id', id)
-      await cancelErrandNotification(id)
-      const updated = get().errands.find((e) => e.id === id)
-      if (updated) scheduleErrandNotification(updated)
+  completeChore: async (id) => {
+    const chore = get().chores.find((e) => e.id === id)
+    if (!chore) return
+    if (chore.recurrence && chore.due_date) {
+      const nextDate = nextRecurrenceDate(chore)
+      set((s) => ({ chores: s.chores.map((e) => e.id === id ? { ...e, due_date: nextDate } : e) }))
+      await supabase.from('chores').update({ due_date: nextDate }).eq('id', id)
+      await cancelChoreNotification(id)
+      const updated = get().chores.find((e) => e.id === id)
+      if (updated) scheduleChoreNotification(updated)
     } else {
-      set((s) => ({ errands: s.errands.filter((e) => e.id !== id) }))
-      await supabase.from('errands').delete().eq('id', id)
-      cancelErrandNotification(id)
+      set((s) => ({ chores: s.chores.filter((e) => e.id !== id) }))
+      await supabase.from('chores').delete().eq('id', id)
+      cancelChoreNotification(id)
     }
   },
 

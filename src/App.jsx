@@ -2,14 +2,14 @@ import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Today from '@/pages/Today'
 import Habits from '@/pages/Habits'
-import Errands from '@/pages/Errands'
+import Chores from '@/pages/Chores'
 import Tasks from '@/pages/Tasks'
 import Login from '@/pages/Login'
 import { useStore } from '@/lib/store'
 import { AuthProvider, useAuth } from '@/lib/auth'
 import {
   requestNotificationPermission,
-  rescheduleAllErrandNotifications,
+  rescheduleAllChoreNotifications,
   rescheduleAllHabitNotifications,
   rescheduleAllTaskNotifications,
 } from '@/lib/notifications'
@@ -33,7 +33,7 @@ function ProtectedRoute({ children }) {
 }
 
 function AppRoutes() {
-  const { initialize, initialized, errands, habits, tasks } = useStore()
+  const { initialize, initialized, chores, habits, tasks } = useStore()
   const { user } = useAuth()
 
   useEffect(() => {
@@ -43,7 +43,7 @@ function AppRoutes() {
   useEffect(() => {
     if (!initialized) return
     requestNotificationPermission().then(() => {
-      rescheduleAllErrandNotifications(errands)
+      rescheduleAllChoreNotifications(chores)
       rescheduleAllHabitNotifications(habits)
       rescheduleAllTaskNotifications(tasks)
     })
@@ -62,7 +62,7 @@ function AppRoutes() {
       <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login />} />
       <Route path="/" element={<ProtectedRoute><Today /></ProtectedRoute>} />
       <Route path="/habits" element={<ProtectedRoute><Habits /></ProtectedRoute>} />
-      <Route path="/errands" element={<ProtectedRoute><Errands /></ProtectedRoute>} />
+      <Route path="/chores" element={<ProtectedRoute><Chores /></ProtectedRoute>} />
       <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
     </Routes>
   )

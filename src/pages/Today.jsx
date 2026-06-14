@@ -6,21 +6,21 @@ export default function Today() {
   const {
     habitsDueToday,
     completeHabit,
-    errands,
-    completeErrand,
+    chores,
+    completeChore,
     tasks,
     completeTask,
   } = useStore();
 
   const today = getTodayString();
   const habits = habitsDueToday();
-  const todayErrands = errands.filter((e) => e.due_date === today);
+  const todayChores = chores.filter((e) => e.due_date === today);
   const todayTasks = tasks
     .filter((t) => !t.parent_task_id && t.due_date === today)
     .sort((a, b) => b.priority - a.priority);
 
   const hasAnything =
-    habits.length + todayErrands.length + todayTasks.length > 0;
+    habits.length + todayChores.length + todayTasks.length > 0;
 
   return (
     <Layout title={getTodayString("EEEE, MMM d")}>
@@ -55,16 +55,16 @@ export default function Today() {
         </section>
       )}
 
-      {todayErrands.length > 0 && (
+      {todayChores.length > 0 && (
         <section className="mt-6">
           <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">
-            Errands
+            Chores
           </h2>
           <div className="divide-y divide-gray-100 dark:divide-gray-800">
-            {todayErrands.map((e) => (
+            {todayChores.map((e) => (
               <div key={e.id} className="flex items-center gap-3 py-3">
                 <button
-                  onClick={() => completeErrand(e.id)}
+                  onClick={() => completeChore(e.id)}
                   className="shrink-0 w-6 h-6 rounded border-2 border-gray-300 dark:border-gray-600 hover:border-indigo-500 transition-colors"
                 />
                 <p className="text-sm">{e.name}</p>

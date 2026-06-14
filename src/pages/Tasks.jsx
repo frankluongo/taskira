@@ -13,8 +13,7 @@ import {
 } from "@dnd-kit/sortable";
 import { getTodayString } from "@/lib/date";
 import Layout from "@/components/layout/Layout";
-import TaskItem from "@/components/tasks/TaskItem";
-import TaskForm from "@/components/tasks/TaskForm";
+import { TaskItem, TaskForm } from "@/features";
 import { useStore, INBOX_PROJECT_ID } from "@/lib/store";
 
 export default function Tasks() {

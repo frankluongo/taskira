@@ -4,7 +4,7 @@ import { Footer, IconList, Navigation } from "@/base";
 const tabs = [
   { to: "/", label: "Today", icon: SunIcon },
   { to: "/habits", label: "Habits", icon: CheckCircleIcon },
-  { to: "/errands", label: "Errands", icon: IconList },
+  { to: "/chores", label: "Chores", icon: IconList },
   { to: "/tasks", label: "Tasks", icon: ClipboardIcon },
 ];
 
