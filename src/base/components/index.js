@@ -9,4 +9,5 @@ export * from "./Input/Input";
 export * from "./Main/Main";
 export * from "./Modal/Modal";
 export * from "./Navigation/Navigation";
+export * from "./Scroller/Scroller";
 export * from "./Select/Select";

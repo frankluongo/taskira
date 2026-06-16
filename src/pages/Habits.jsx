@@ -1,19 +1,8 @@
 import { useState } from "react";
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-  arrayMove,
-} from "@dnd-kit/sortable";
+import { arrayMove } from "@dnd-kit/sortable";
 import Layout from "@/components/layout/Layout";
 
-import { HabitForm, HabitItem } from "@/features";
+import { DragContext, HabitForm, HabitItem } from "@/features";
 
 import { useStore } from "@/lib/store";
 import {
@@ -39,9 +28,6 @@ export default function Habits() {
   const todayHabitIds = filterToday
     ? new Set(habitsDueToday().map((h) => h.id))
     : null;
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-  );
 
   return (
     <Layout
@@ -53,6 +39,7 @@ export default function Habits() {
             aria-pressed={filterToday}
             onClick={() => setFilterToday((x) => !x)}
             variant="icon slim secondary"
+            title="Toggle today filter"
           >
             <IconCalendar />
           </Button>
@@ -61,6 +48,7 @@ export default function Habits() {
             aria-pressed={showCompleted}
             onClick={() => setShowCompleted((x) => !x)}
             variant="icon slim secondary"
+            title="Toggle show completed habits"
           >
             <IconCheckmark />
           </Button>
@@ -69,6 +57,7 @@ export default function Habits() {
             aria-pressed={dragMode}
             onClick={() => setDragMode((x) => !x)}
             variant="icon slim secondary"
+            title="Toggle drag mode"
           >
             <IconDrag />
           </Button>
@@ -108,26 +97,20 @@ export default function Habits() {
             </button>
             {!isCollapsed && (
               <>
-                <DndContext
-                  sensors={sensors}
-                  collisionDetection={closestCenter}
+                <DragContext
+                  items={visibleHabits}
                   onDragEnd={(e) => handleDragEnd(group, e)}
                 >
-                  <SortableContext
-                    items={visibleHabits.map((h) => h.id)}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    <div className="divide-y divide-gray-100 dark:divide-gray-800">
-                      {visibleHabits.map((habit) => (
-                        <HabitItem
-                          key={habit.id}
-                          habit={habit}
-                          dragMode={dragMode}
-                        />
-                      ))}
-                    </div>
-                  </SortableContext>
-                </DndContext>
+                  <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                    {visibleHabits.map((habit) => (
+                      <HabitItem
+                        key={habit.id}
+                        habit={habit}
+                        dragMode={dragMode}
+                      />
+                    ))}
+                  </div>
+                </DragContext>
                 {visibleHabits.length === 0 && (
                   <p className="text-sm text-gray-400 italic">
                     All {group} habits done!

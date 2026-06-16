@@ -1,21 +1,10 @@
 import { useState, useRef } from "react";
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-  arrayMove,
-} from "@dnd-kit/sortable";
+import { arrayMove } from "@dnd-kit/sortable";
 import { getTodayString } from "@/lib/date";
 import Layout from "@/components/layout/Layout";
-import { TaskItem, TaskForm } from "@/features";
+import { DragContext, TaskItem, TaskForm } from "@/features";
 import { useStore, INBOX_PROJECT_ID } from "@/lib/store";
-import { Button, Float, IconPlus, Modal } from "@/base";
+import { Button, Float, IconCalendar, IconDrag, IconPlus, Modal, Scroller } from "@/base";
 
 export default function Tasks() {
   const { tasks, projects, addTask, reorderTasks, updateProject } = useStore();
@@ -24,10 +13,7 @@ export default function Tasks() {
   const [filterToday, setFilterToday] = useState(false);
   const [renamingProject, setRenamingProject] = useState(null);
   const [renameValue, setRenameValue] = useState("");
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-  );
+  const [dragMode, setDragMode] = useState(false);
 
   const topLevelTasks = tasks
     .filter((t) => !t.parent_task_id)
@@ -73,56 +59,63 @@ export default function Tasks() {
       title="Tasks"
       action={
         <div className="flex items-center gap-3">
-          <button
+          <Button
+            aria-label="Toggle filter today"
+            aria-pressed={filterToday}
             onClick={() => setFilterToday((x) => !x)}
-            className={`text-sm ${filterToday ? "text-indigo-600 dark:text-indigo-400 font-medium" : "text-gray-400 dark:text-gray-500"}`}
+            variant="icon slim secondary"
+            title="Toggle today filter"
           >
-            Today
-          </button>
+            <IconCalendar />
+          </Button>
+          <Button
+            aria-label="Toggle drag mode"
+            aria-pressed={dragMode}
+            onClick={() => setDragMode((x) => !x)}
+            variant="icon slim secondary"
+            title="Toggle drag mode"
+          >
+            <IconDrag />
+          </Button>
         </div>
       }
     >
       {/* Project filter tabs — hidden when Today filter is active */}
       {!filterToday && (
-        <div className="flex gap-2 overflow-x-auto py-3 -mx-4 px-4 scrollbar-none">
-          <ProjectTab
-            label="All"
-            active={activeProject === "all"}
-            onClick={() => setActiveProject("all")}
-          />
-          {projects.map((p) => (
+        <Scroller style={{ flex: "0 0 auto" }}>
+          <li>
             <ProjectTab
-              key={p.id}
-              label={p.name}
-              active={activeProject === p.id}
-              onClick={() => setActiveProject(p.id)}
-              onLongPress={() => openRename(p)}
+              label="All"
+              active={activeProject === "all"}
+              onClick={() => setActiveProject("all")}
             />
+          </li>
+          {projects.map((p) => (
+            <li key={p.id}>
+              <ProjectTab
+                label={p.name}
+                active={activeProject === p.id}
+                onClick={() => setActiveProject(p.id)}
+                onLongPress={() => openRename(p)}
+              />
+            </li>
           ))}
-        </div>
+        </Scroller>
       )}
 
       {/* Task list */}
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext
-          items={topLevelTasks.map((t) => t.id)}
-          strategy={verticalListSortingStrategy}
-        >
-          <div className="divide-y divide-gray-100 dark:divide-gray-800">
-            {topLevelTasks.map((task) => (
-              <TaskItem
-                key={task.id}
-                task={task}
-                subtasks={tasks.filter((t) => t.parent_task_id === task.id)}
-              />
-            ))}
-          </div>
-        </SortableContext>
-      </DndContext>
+      <DragContext items={topLevelTasks} onDragEnd={handleDragEnd}>
+        <div className="divide-y divide-gray-100 dark:divide-gray-800">
+          {topLevelTasks.map((task) => (
+            <TaskItem
+              key={task.id}
+              task={task}
+              subtasks={tasks.filter((t) => t.parent_task_id === task.id)}
+              dragMode={dragMode}
+            />
+          ))}
+        </div>
+      </DragContext>
 
       {topLevelTasks.length === 0 && (
         <p className="text-center text-gray-400 text-sm mt-12">No tasks yet.</p>
@@ -224,18 +217,15 @@ function ProjectTab({ label, active, onClick, onLongPress }) {
   }
 
   return (
-    <button
+    <Button
+      variant="pill"
+      aria-pressed={active}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerUp}
       onClick={handleClick}
-      className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors select-none ${
-        active
-          ? "bg-indigo-600 text-white"
-          : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
-      }`}
     >
       {label}
-    </button>
+    </Button>
   );
 }

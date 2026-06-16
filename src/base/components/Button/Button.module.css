@@ -68,6 +68,27 @@
 /* #endregion */
 /* ICON: END */
 /* ============================================================== */
+/* PILL: START */
+/* #region */
+.button.pill {
+  padding: 0.25rem 0.5rem;
+
+  font-size: 0.75rem;
+
+  background-color: color-mix(
+    in srgb,
+    var(--color-primary-500) 20%,
+    transparent
+  );
+  border-radius: 9999px;
+}
+
+.button.pill[aria-pressed="true"] {
+  background-color: var(--color-primary-500);
+}
+/* #endregion */
+/* PILL: END */
+/* ============================================================== */
 /* PRIMARY: START */
 /* #region */
 .button.primary {

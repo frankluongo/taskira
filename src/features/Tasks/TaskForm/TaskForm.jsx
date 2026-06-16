@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { INBOX_PROJECT_ID } from "@/lib/store";
+import { Button, FieldsRow, Form, Input, Select } from "@/base";
 
 export function TaskForm({
   projects,
@@ -34,59 +35,61 @@ export function TaskForm({
   }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 flex flex-col gap-3"
-    >
-      <input
+    <Form onSubmit={handleSubmit}>
+      <Input
         autoFocus
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Task name…"
         className="bg-white dark:bg-gray-800 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500 w-full"
       />
-      <div className="flex gap-2 flex-wrap">
-        <select
+      <FieldsRow>
+        <Select
+          id="priority"
+          label="Priority"
           value={priority}
           onChange={(e) => setPriority(Number(e.target.value))}
-          className="flex-1 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-2"
         >
           {[5, 4, 3, 2, 1].map((p) => (
             <option key={p} value={p}>
               {["", "Someday", "Low", "Medium", "High", "Critical"][p]}
             </option>
           ))}
-        </select>
-        <select
+        </Select>
+        <Select
           value={projectId}
+          id="project"
+          label="Project"
           onChange={(e) => setProjectId(e.target.value)}
-          className="flex-1 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-2"
         >
           {projects.map((p) => (
             <option key={p.id} value={p.id}>
               {p.name}
             </option>
           ))}
-        </select>
-        <input
+        </Select>
+      </FieldsRow>
+      <FieldsRow variant="wrap">
+        <Input
+          id="due-date"
+          label="Due date"
+          name="due-date"
+          onChange={(e) => setDueDate(e.target.value)}
           type="date"
           value={dueDate}
-          onChange={(e) => setDueDate(e.target.value)}
-          className="flex-1 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-2"
         />
-        <input
+        <Input
+          label="Time"
+          id="time"
+          name="time"
+          onChange={(e) => setAlarmTime(e.target.value)}
           type="time"
           value={alarmTime}
-          onChange={(e) => setAlarmTime(e.target.value)}
-          className="flex-1 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-2"
         />
-      </div>
-      <button
-        type="submit"
-        className="w-full py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
-      >
+      </FieldsRow>
+      <Button type="submit" variant="primary">
         {submitLabel}
-      </button>
-    </form>
+      </Button>
+    </Form>
   );
 }

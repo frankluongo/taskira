@@ -72,8 +72,8 @@ export function HabitForm({
         <Select
           id="group"
           label="Group"
-          value={group}
           onChange={(e) => setGroup(e.target.value)}
+          value={group}
         >
           {GROUPS.map((g) => (
             <option key={g} value={g}>
@@ -125,20 +125,20 @@ export function HabitForm({
           onChange={(e) => setAlarmTime(e.target.value)}
         />
         <Input
-          label="Start date"
           id="start-date"
+          label="Start date"
           name="start-date"
+          onChange={(e) => setStartDate(e.target.value)}
           type="date"
           value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
         />
         <Input
-          label="End date"
           id="end-date"
+          label="End date"
           name="end-date"
+          onChange={(e) => setEndDate(e.target.value)}
           type="date"
           value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
         />
       </FieldsRow>
 
