@@ -5,7 +5,7 @@
   padding-block: 1rem;
   padding-inline: 1rem;
 
-  background-color: var(--theme-color-background-tint-02);
+  background-color: var(--theme-color-background-300);
 }
 
 .header.site {
@@ -19,6 +19,6 @@
   padding-block-start: calc(env(safe-area-inset-top) + 1rem);
   padding-inline: 1rem;
 
-  background-color: var(--theme-color-background-tint-01);
-  border-bottom: 1px solid var(--theme-color-border-default);
+  background-color: var(--theme-color-background-400);
+  border-bottom: 1px solid var(--theme-color-border-500);
 }

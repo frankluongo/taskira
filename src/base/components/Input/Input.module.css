@@ -6,13 +6,13 @@
   font-size: 1rem;
 
   appearance: none;
-  background-color: var(--theme-color-background-default);
-  border: 1px solid var(--theme-color-border-default);
+  background-color: var(--theme-color-background-500);
+  border: 1px solid var(--theme-color-border-500);
   border-radius: 0.5rem;
 }
 
 .input:focus-visible {
-  outline: 1px solid var(--color-primary-500);
+  outline: 1px solid var(--theme-color-accent-500);
 }
 
 .label {

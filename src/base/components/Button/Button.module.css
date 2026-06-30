@@ -21,9 +21,9 @@
   height: var(--size);
   width: var(--size);
 
-  color: var(--color-white);
+  color: var(--theme-color-on-accent);
 
-  background-color: var(--color-primary-500);
+  background-color: var(--theme-color-accent-500);
   border-radius: 50%;
 }
 
@@ -32,12 +32,16 @@
 }
 
 .button.icon.secondary {
-  background-color: transparent;
-  border: 1px solid var(--color-primary-500);
+  color: var(--theme-color-text-500);
+
+  background-color: var(--theme-color-accent-100);
+  border: 1px solid var(--theme-color-accent-500);
 }
 
 .button.icon.secondary[aria-pressed="true"] {
-  background-color: var(--color-primary-500);
+  color: var(--theme-color-on-accent);
+
+  background-color: var(--theme-color-accent-500);
 }
 
 .button.icon.slim {
@@ -47,11 +51,14 @@
 
 @media (hover: hover) {
   .button.icon {
-    background-color: var(--color-primary-100);
+    background-color: var(--theme-color-accent-100);
   }
 
   .button.icon:hover {
-    background-color: var(--color-primary-500);
+    color: var(--theme-color-on-accent);
+
+    background-color: var(--theme-color-accent-500);
+    opacity: 1;
   }
 }
 
@@ -94,7 +101,7 @@
 .button.primary {
   padding: 0.5rem 1rem;
 
-  color: var(--color-white);
+  color: var(--theme-color-on-accent);
   font-weight: 700;
 
   background-color: var(--color-primary-500);
@@ -108,7 +115,7 @@
   }
 
   .button.primary:hover {
-    background-color: var(--color-primary-500);
+    background-color: var(--theme-color-accent-500);
   }
 }
 /* #endregion */
@@ -125,10 +132,10 @@
   justify-content: center;
   width: var(--size);
 
-  color: var(--color-white);
+  color: var(--theme-color-on-accent);
 
   border-radius: 50%;
-  border: 1px solid var(--color-primary-500);
+  border: 1px solid var(--theme-color-accent-500);
 }
 
 .button.toggle .toggleIndicator {
@@ -137,7 +144,7 @@
 }
 
 .button.toggle.active {
-  background-color: var(--color-primary-500);
+  background-color: var(--theme-color-accent-500);
 }
 
 .button.toggle.active .toggleIndicator {

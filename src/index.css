@@ -4,62 +4,81 @@
 
 @layer variables {
   :root {
-    --color-primary-100: color-mix(
-      in srgb,
-      var(--color-primary-500) 50%,
-      transparent
-    );
-    --color-primary-500: hsl(208, 37%, 66%);
-    --color-primary-600: color-mix(
-      in srgb,
-      var(--color-primary-500) 50%,
-      var(--color-black)
-    );
-    --color-primary-700: color-mix(
-      in srgb,
-      var(--color-primary-500) 40%,
-      var(--color-black)
-    );
-
-    --color-black: hsl(210, 20%, 5%);
-    --color-gray-darkest: hsl(211, 53%, 8%);
-    --color-gray-darker: hsl(211, 53%, 12%);
-    --color-gray-dark: hsl(211, 53%, 16%);
-    --color-gray-medium: hsl(0, 0%, 70%);
-    --color-gray-light: hsl(90, 7%, 86%);
-    --color-gray-lighter: hsl(90, 7%, 90%);
-    --color-gray-lightest: hsl(90, 7%, 94%);
-    --color-white: hsl(0, 0%, 100%);
-
+    /* ========================================================== */
+    /* Color Palette */
+    /* All the colors for this project */
+    /* ========================================================== */
+    /* #region */
+    /* Primary Colors */
+    --color-strawberry-red: #ef233c;
+    --color-emerald: #06d6a0;
+    --color-royal-gold: #ffd166;
+    --color-turquoise-surf: #00b4d8;
+    /* Grayscale */
+    --color-black: #1f2127;
+    --color-space-indigo: #22223b;
+    --color-platinum: #edf2f4;
+    --color-white: #ffffff;
+    /* #endregion */
+    /* ========================================================== */
+    /* Typography */
+    /* #region */
     --font-primary: "Manrope", sans-serif;
     --font-secondary: "Teko", sans-serif;
-  }
-}
+    /* #endregion */
+    /* ========================================================== */
+    /* Base Theme Colors */
+    /* THESE ARE THE ONLY COLORS THAT SHOULD CHANGE */
+    --theme-color-accent-500: var(--color-turquoise-surf);
+    --theme-color-on-accent: var(--color-black);
+    --theme-color-background-500: var(--color-white);
+    --theme-color-text-500: var(--color-space-indigo);
+    /* ========================================================== */
+    /* Derived Theme Colors */
+    /* #region */
+    --theme-color-accent-100: color-mix(
+      in srgb,
+      var(--theme-color-accent-500) 10%,
+      var(--theme-color-background-500) 100%
+    );
+    --theme-color-background-300: color-mix(
+      in srgb,
+      var(--theme-color-background-500) 100%,
+      var(--theme-color-text-500) 3%
+    );
 
-@layer theme {
-  :root {
-    --theme-color-background-tint-03: var(--color-gray-light);
-    --theme-color-background-tint-02: var(--color-gray-lighter);
-    --theme-color-background-tint-01: var(--color-gray-lightest);
-    --theme-color-background-default: var(--color-white);
+    --theme-color-background-400: color-mix(
+      in srgb,
+      var(--theme-color-background-500) 100%,
+      var(--theme-color-text-500) 5%
+    );
 
-    --theme-color-text-default: var(--color-gray-dark);
-    --theme-color-text-muted: var(--color-gray-light);
+    --theme-color-border-500: color-mix(
+      in srgb,
+      var(--theme-color-background-500) 100%,
+      var(--theme-color-text-500) 20%
+    );
 
-    --theme-color-border-default: var(--color-gray-lightest);
+    --theme-color-text-300: color-mix(
+      in srgb,
+      var(--theme-color-text-500) 80%,
+      var(--theme-color-background-500) 100%
+    );
+    --theme-color-text-400: color-mix(
+      in srgb,
+      var(--theme-color-text-500) 100%,
+      var(--theme-color-background-500) 100%
+    );
+    /* #endregion */
+    /* ========================================================== */
   }
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --theme-color-background-tint-03: var(--color-gray-dark);
-      --theme-color-background-tint-02: var(--color-gray-darker);
-      --theme-color-background-tint-01: var(--color-gray-darkest);
-      --theme-color-background-default: var(--color-black);
-
-      --theme-color-text-default: var(--color-gray-lightest);
-      --theme-color-text-muted: var(--color-gray-medium);
-
-      --theme-color-border-default: var(--color-gray-darkest);
+      --theme-color-accent-500: var(--color-emerald);
+      --theme-color-on-accent: var(--color-black);
+      --theme-color-background-500: var(--color-black);
+      --theme-color-text-500: var(--color-white);
     }
   }
 }
@@ -83,9 +102,9 @@
   }
 
   body {
-    color: var(--theme-color-text-default);
+    color: var(--theme-color-text-500);
 
-    background-color: var(--theme-color-background-default);
+    background-color: var(--theme-color-background-500);
   }
 
   #root {
