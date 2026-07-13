@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import Today from "@/pages/Today";
 import Habits from "@/pages/Habits";
 import Chores from "@/pages/Chores";
@@ -111,11 +111,11 @@ function AppRoutes() {
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter
+      <HashRouter
         future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
       >
         <AppRoutes />
-      </BrowserRouter>
+      </HashRouter>
     </AuthProvider>
   );
 }

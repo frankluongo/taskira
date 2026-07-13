@@ -22,3 +22,12 @@
   background-color: var(--theme-color-background-400);
   border-bottom: 1px solid var(--theme-color-border-500);
 }
+
+:global(.desktop-app) .header.site {
+  padding-block-start: 2.5rem;
+  -webkit-app-region: drag;
+}
+
+:global(.desktop-app) .header.site * {
+  -webkit-app-region: no-drag;
+}
