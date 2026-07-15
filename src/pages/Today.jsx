@@ -1,6 +1,8 @@
 import { getTodayString } from "@/lib/date";
-import Layout from "@/components/layout/Layout";
-import { useStore, PRIORITY_LABELS } from "@/lib/store";
+import { useStore } from "@/lib/store";
+import { List, Section, ToggleButton } from "@/base";
+import { Layout, PriorityBadge } from "@/features";
+import css from "./Today.module.css";
 
 export default function Today() {
   const {
@@ -25,82 +27,60 @@ export default function Today() {
   return (
     <Layout title={getTodayString("EEEE, MMM d")}>
       {!hasAnything && (
-        <div className="flex flex-col items-center justify-center h-64 gap-3 text-center">
-          <span className="text-4xl">✓</span>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
+        <div className={css.empty}>
+          <span className={css.emptyIcon}>✓</span>
+          <p className={css.emptyText}>
             You&apos;re all caught up for today.
           </p>
         </div>
       )}
 
       {habits.length > 0 && (
-        <section className="mt-6">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">
-            Habits
-          </h2>
-          <div className="divide-y divide-gray-100 dark:divide-gray-800">
+        <Section title="Habits">
+          <List>
             {habits.map((h) => (
-              <div key={h.id} className="flex items-center gap-3 py-3">
-                <button
-                  onClick={() => completeHabit(h.id)}
-                  className="shrink-0 w-6 h-6 rounded-full border-2 border-gray-300 dark:border-gray-600 hover:border-indigo-500 transition-colors"
-                />
+              <div key={h.id} className={css.row}>
+                <ToggleButton onClick={() => completeHabit(h.id)} />
                 <div>
-                  <p className="text-sm">{h.name}</p>
-                  <p className="text-xs text-gray-400">{h.group_name}</p>
+                  <p className={css.name}>{h.name}</p>
+                  <p className={css.meta}>{h.group_name}</p>
                 </div>
               </div>
             ))}
-          </div>
-        </section>
+          </List>
+        </Section>
       )}
 
       {todayChores.length > 0 && (
-        <section className="mt-6">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">
-            Chores
-          </h2>
-          <div className="divide-y divide-gray-100 dark:divide-gray-800">
+        <Section title="Chores">
+          <List>
             {todayChores.map((e) => (
-              <div key={e.id} className="flex items-center gap-3 py-3">
-                <button
+              <div key={e.id} className={css.row}>
+                <ToggleButton
+                  variant="square"
                   onClick={() => completeChore(e.id)}
-                  className="shrink-0 w-6 h-6 rounded border-2 border-gray-300 dark:border-gray-600 hover:border-indigo-500 transition-colors"
                 />
-                <p className="text-sm">{e.name}</p>
+                <p className={css.name}>{e.name}</p>
               </div>
             ))}
-          </div>
-        </section>
+          </List>
+        </Section>
       )}
 
       {todayTasks.length > 0 && (
-        <section className="mt-6">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-3">
-            Tasks
-          </h2>
-          <div className="divide-y divide-gray-100 dark:divide-gray-800">
-            {todayTasks.map((t) => {
-              const p = PRIORITY_LABELS[t.priority] || PRIORITY_LABELS[1];
-              return (
-                <div key={t.id} className="flex items-center gap-3 py-3">
-                  <button
-                    onClick={() => completeTask(t.id)}
-                    className="shrink-0 w-5 h-5 rounded-full border-2 border-gray-300 dark:border-gray-600 hover:border-indigo-500 transition-colors"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm truncate">{t.name}</p>
-                  </div>
-                  <span
-                    className={`text-xs font-medium px-1.5 py-0.5 rounded shrink-0 ${p.color} ${p.bg}`}
-                  >
-                    {p.label}
-                  </span>
+        <Section title="Tasks">
+          <List>
+            {todayTasks.map((t) => (
+              <div key={t.id} className={css.row}>
+                <ToggleButton variant="md" onClick={() => completeTask(t.id)} />
+                <div className={css.body}>
+                  <p className={css.taskName}>{t.name}</p>
                 </div>
-              );
-            })}
-          </div>
-        </section>
+                <PriorityBadge priority={t.priority} />
+              </div>
+            ))}
+          </List>
+        </Section>
       )}
     </Layout>
   );

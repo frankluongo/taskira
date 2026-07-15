@@ -1,3 +1,4 @@
+@layer components {
 .input {
   min-height: 2.5rem;
   padding: 0.5rem 0.75rem;
@@ -26,4 +27,5 @@
   gap: 0.25rem;
 
   flex: 1;
+}
 }

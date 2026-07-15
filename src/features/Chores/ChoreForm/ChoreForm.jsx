@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useStore } from "@/lib/store";
-import { Form, FieldsRow, Input, Select } from "@/base";
+import { Button, Form, FieldsRow, Input, Select } from "@/base";
+import css from "./ChoreForm.module.css";
 
 function parseRecurrence(value) {
   if (!value)
@@ -89,26 +90,29 @@ export function ChoreForm({
         </Select>
       </FieldsRow>
       {recurrence === "custom" && (
-        <div className="flex gap-2 items-center">
-          <span className="text-sm text-gray-500">Every</span>
-          <input
+        <FieldsRow>
+          <Input
             type="number"
             min="1"
+            id="chore-custom-interval"
+            name="chore-custom-interval"
+            label="Every"
             value={customInterval}
             onChange={(e) => setCustomInterval(e.target.value)}
-            className="w-20 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-2"
           />
-          <select
+          <Select
+            id="chore-custom-unit"
+            name="chore-custom-unit"
+            label="Unit"
             value={customUnit}
             onChange={(e) => setCustomUnit(e.target.value)}
-            className="flex-1 text-sm bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-2"
           >
             <option value="days">Days</option>
             <option value="weeks">Weeks</option>
             <option value="months">Months</option>
             <option value="years">Years</option>
-          </select>
-        </div>
+          </Select>
+        </FieldsRow>
       )}
       <FieldsRow variant="wrap">
         <Input
@@ -128,24 +132,20 @@ export function ChoreForm({
           label="Alarm time"
         />
       </FieldsRow>
-      <div className="flex gap-2">
-        <button
-          type="submit"
-          className="flex-1 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition-colors"
-        >
+      <div className={css.submitRow}>
+        <Button type="submit" variant="primary" className={css.submitButton}>
           {submitLabel}
-        </button>
+        </Button>
         {onAddList && (
-          <button
-            type="button"
+          <Button
+            variant="secondary"
             onClick={() => {
               const n = prompt("List name?");
               if (n) onAddList(n);
             }}
-            className="px-3 py-2 text-sm text-indigo-600 dark:text-indigo-400 border border-indigo-300 dark:border-indigo-700 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors"
           >
             + List
-          </button>
+          </Button>
         )}
       </div>
     </Form>

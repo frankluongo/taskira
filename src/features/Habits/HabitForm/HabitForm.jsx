@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button, FieldsRow, Form, Input, Select } from "@/base";
+import css from "./HabitForm.module.css";
 
 const GROUPS = ["AM", "Misc", "PM"];
 
@@ -97,17 +98,13 @@ export function HabitForm({
       </FieldsRow>
 
       {recurrence === "specific_days" && (
-        <div className="flex gap-1">
+        <div className={css.dayRow}>
           {DAY_LABELS.map((d, i) => (
             <button
               key={i}
               type="button"
               onClick={() => toggleDay(i)}
-              className={`flex-1 py-1.5 rounded text-xs font-medium transition-colors ${
-                days.includes(i)
-                  ? "bg-indigo-600 text-white"
-                  : "bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-400"
-              }`}
+              className={`${css.day} ${days.includes(i) ? css.active : ""}`}
             >
               {d}
             </button>

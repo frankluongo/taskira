@@ -248,9 +248,9 @@ export const useStore = create((set, get) => ({
 }))
 
 export const PRIORITY_LABELS = {
-  5: { label: 'Critical', color: 'text-red-500',    bg: 'bg-red-100 dark:bg-red-900/30' },
-  4: { label: 'High',     color: 'text-orange-500', bg: 'bg-orange-100 dark:bg-orange-900/30' },
-  3: { label: 'Medium',   color: 'text-yellow-500', bg: 'bg-yellow-100 dark:bg-yellow-900/30' },
-  2: { label: 'Low',      color: 'text-blue-500',   bg: 'bg-blue-100 dark:bg-blue-900/30' },
-  1: { label: 'Someday',  color: 'text-gray-400',   bg: 'bg-gray-100 dark:bg-gray-800' },
+  5: { label: 'Critical' },
+  4: { label: 'High' },
+  3: { label: 'Medium' },
+  2: { label: 'Low' },
+  1: { label: 'Someday' },
 }

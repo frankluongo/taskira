@@ -14,16 +14,13 @@ import {
   rescheduleAllHabitNotifications,
   rescheduleAllTaskNotifications,
 } from "@/lib/notifications";
+import { Spinner } from "@/base";
 
 function ProtectedRoute({ children }) {
   const { user } = useAuth();
 
   if (user === undefined) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (user === null) {
@@ -51,11 +48,7 @@ function AppRoutes() {
   }, [initialized]);
 
   if (user && !initialized) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
+    return <Spinner />;
   }
 
   return (

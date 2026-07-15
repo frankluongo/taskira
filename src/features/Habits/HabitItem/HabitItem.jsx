@@ -5,6 +5,7 @@ import { useStore } from "@/lib/store";
 import { formatTime } from "@/lib/date";
 import { HabitForm } from "../HabitForm/HabitForm";
 import { Button, Modal, ToggleButton } from "@/base/components";
+import { IconBell, IconEdit, IconGrip, IconTrash } from "@/base/icons";
 
 import css from "./HabitItem.module.css";
 
@@ -48,30 +49,24 @@ export function HabitItem({ habit, dragMode = false }) {
 
   return (
     <div ref={setNodeRef} style={style} className={css.item}>
-      <div className="flex items-center gap-3 py-3">
+      <div className={css.row}>
         {dragMode && (
-          <button
-            {...attributes}
-            {...listeners}
-            className="cursor-grab touch-none text-gray-300 dark:text-gray-700 hover:text-gray-400 shrink-0"
-          >
-            <GripIcon />
+          <button {...attributes} {...listeners} className={css.grip}>
+            <IconGrip />
           </button>
         )}
 
         <ToggleButton active={done} onClick={toggle} />
 
-        <div className="flex-1 min-w-0">
-          <span
-            className={`text-sm block ${done ? "line-through text-gray-400" : ""}`}
-          >
+        <div className={css.body}>
+          <span className={`${css.name} ${done ? css.done : ""}`}>
             {habit.name}
           </span>
-          <p className="text-xs text-gray-400 mt-0.5">
+          <p className={css.meta}>
             {RECURRENCE_LABELS[habit.recurrence]}
             {habit.alarm_time && (
-              <span className="ml-2 inline-flex items-center gap-0.5">
-                <BellIcon />
+              <span className={css.alarm}>
+                <IconBell />
                 {formatTime(habit.alarm_time)}
               </span>
             )}
@@ -83,13 +78,13 @@ export function HabitItem({ habit, dragMode = false }) {
             onClick={() => setShowEditModal(true)}
             variant="icon secondary slim"
           >
-            <EditIcon />
+            <IconEdit />
           </Button>
           <Button
             onClick={() => deleteHabit(habit.id)}
             variant="icon secondary slim"
           >
-            <TrashIcon />
+            <IconTrash />
           </Button>
         </div>
       </div>
@@ -109,66 +104,5 @@ export function HabitItem({ habit, dragMode = false }) {
         />
       </Modal>
     </div>
-  );
-}
-
-function BellIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      className="w-3 h-3 inline"
-    >
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-    </svg>
-  );
-}
-
-function GripIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-      <circle cx="9" cy="6" r="1.5" />
-      <circle cx="15" cy="6" r="1.5" />
-      <circle cx="9" cy="12" r="1.5" />
-      <circle cx="15" cy="12" r="1.5" />
-      <circle cx="9" cy="18" r="1.5" />
-      <circle cx="15" cy="18" r="1.5" />
-    </svg>
-  );
-}
-
-function TrashIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      className="w-4 h-4"
-    >
-      <polyline points="3 6 5 6 21 6" />
-      <path d="M19 6l-1 14H6L5 6" />
-      <path d="M10 11v6" />
-      <path d="M14 11v6" />
-      <path d="M9 6V4h6v2" />
-    </svg>
-  );
-}
-
-function EditIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      className="w-4 h-4"
-    >
-      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-    </svg>
   );
 }

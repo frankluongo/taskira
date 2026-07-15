@@ -1,19 +1,21 @@
 import { useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
-import Layout from "@/components/layout/Layout";
 
-import { DragContext, HabitForm, HabitItem } from "@/features";
+import { DragContext, HabitForm, HabitItem, Layout } from "@/features";
 
 import { useStore } from "@/lib/store";
 import {
   Button,
+  Disclosure,
   Float,
   IconCalendar,
   IconCheckmark,
   IconDrag,
   IconPlus,
+  List,
   Modal,
 } from "@/base";
+import css from "./Habits.module.css";
 
 const GROUPS = ["AM", "Misc", "PM"];
 
@@ -33,7 +35,7 @@ export default function Habits() {
     <Layout
       title="Habits"
       action={
-        <div className="flex items-center gap-3">
+        <div className={css.actions}>
           <Button
             aria-label="Toggle filter today"
             aria-pressed={filterToday}
@@ -75,33 +77,21 @@ export default function Habits() {
           : allGroupHabits.filter((h) => !isHabitDoneToday(h.id));
         const isCollapsed = collapsed[group];
         return (
-          <section key={group}>
-            <button
-              onClick={() =>
+          <section key={group} className={css.group}>
+            <Disclosure
+              title={group}
+              open={!isCollapsed}
+              onToggle={() =>
                 setCollapsed((prev) => ({ ...prev, [group]: !prev[group] }))
               }
-              className="flex items-center gap-1 w-full text-left mb-2"
-            >
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400">
-                {group}
-              </h2>
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
-                className={`w-3 h-3 text-gray-400 transition-transform ${isCollapsed ? "-rotate-90" : ""}`}
-              >
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </button>
+            />
             {!isCollapsed && (
               <>
                 <DragContext
                   items={visibleHabits}
                   onDragEnd={(e) => handleDragEnd(group, e)}
                 >
-                  <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                  <List>
                     {visibleHabits.map((habit) => (
                       <HabitItem
                         key={habit.id}
@@ -109,12 +99,10 @@ export default function Habits() {
                         dragMode={dragMode}
                       />
                     ))}
-                  </div>
+                  </List>
                 </DragContext>
                 {visibleHabits.length === 0 && (
-                  <p className="text-sm text-gray-400 italic">
-                    All {group} habits done!
-                  </p>
+                  <p className={css.empty}>All {group} habits done!</p>
                 )}
               </>
             )}

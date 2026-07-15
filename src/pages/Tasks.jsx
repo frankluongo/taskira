@@ -1,10 +1,20 @@
 import { useState, useRef } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 import { getTodayString } from "@/lib/date";
-import Layout from "@/components/layout/Layout";
-import { DragContext, TaskItem, TaskForm } from "@/features";
+import { DragContext, TaskItem, TaskForm, Layout } from "@/features";
 import { useStore, INBOX_PROJECT_ID } from "@/lib/store";
-import { Button, Float, IconCalendar, IconDrag, IconPlus, Modal, Scroller } from "@/base";
+import {
+  Button,
+  Float,
+  IconCalendar,
+  IconDrag,
+  IconPlus,
+  Input,
+  List,
+  Modal,
+  Scroller,
+} from "@/base";
+import css from "./Tasks.module.css";
 
 export default function Tasks() {
   const { tasks, projects, addTask, reorderTasks, updateProject } = useStore();
@@ -58,7 +68,7 @@ export default function Tasks() {
     <Layout
       title="Tasks"
       action={
-        <div className="flex items-center gap-3">
+        <div className={css.actions}>
           <Button
             aria-label="Toggle filter today"
             aria-pressed={filterToday}
@@ -105,7 +115,7 @@ export default function Tasks() {
 
       {/* Task list */}
       <DragContext items={topLevelTasks} onDragEnd={handleDragEnd}>
-        <div className="divide-y divide-gray-100 dark:divide-gray-800">
+        <List>
           {topLevelTasks.map((task) => (
             <TaskItem
               key={task.id}
@@ -114,53 +124,35 @@ export default function Tasks() {
               dragMode={dragMode}
             />
           ))}
-        </div>
+        </List>
       </DragContext>
 
       {topLevelTasks.length === 0 && (
-        <p className="text-center text-gray-400 text-sm mt-12">No tasks yet.</p>
+        <p className={css.empty}>No tasks yet.</p>
       )}
 
       {/* Rename project modal */}
-      {renamingProject && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-          onClick={() => setRenamingProject(null)}
-        >
-          <div
-            className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-sm mx-4 shadow-xl overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between px-4 pt-4 pb-2">
-              <h2 className="text-base font-semibold">Rename Project</h2>
-              <button
-                onClick={() => setRenamingProject(null)}
-                className="text-gray-400 hover:text-gray-600 text-xl leading-none"
-              >
-                ✕
-              </button>
-            </div>
-            <form
-              onSubmit={handleRenameSubmit}
-              className="px-4 pb-4 flex flex-col gap-3"
-            >
-              <input
-                autoFocus
-                className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm bg-transparent focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                value={renameValue}
-                onChange={(e) => setRenameValue(e.target.value)}
-                placeholder="Project name"
-              />
-              <button
-                type="submit"
-                className="w-full bg-indigo-600 text-white text-sm font-medium py-2 rounded-lg"
-              >
-                Save
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+      <Modal
+        open={!!renamingProject}
+        onClose={() => setRenamingProject(null)}
+        title="Rename Project"
+      >
+        <form onSubmit={handleRenameSubmit} className={css.renameForm}>
+          <Input
+            autoFocus
+            id="project-rename"
+            name="project-rename"
+            label="Project name"
+            showLabel={false}
+            value={renameValue}
+            onChange={(e) => setRenameValue(e.target.value)}
+            placeholder="Project name"
+          />
+          <Button type="submit" variant="primary">
+            Save
+          </Button>
+        </form>
+      </Modal>
 
       {/* Add task modal */}
       <Modal

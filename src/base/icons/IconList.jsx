@@ -1,11 +1,11 @@
-export function IconList() {
+export function IconList(props) {
   return (
     <svg
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
       strokeWidth={2}
-      className="w-6 h-6"
+      {...props}
     >
       <line x1="8" y1="6" x2="21" y2="6" />
       <line x1="8" y1="12" x2="21" y2="12" />

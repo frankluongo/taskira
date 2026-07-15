@@ -1,3 +1,4 @@
+@layer components {
 .button {
   appearance: none;
   background-color: transparent;
@@ -121,10 +122,34 @@
 /* #endregion */
 /* PRIMARY: END */
 /* ============================================================== */
+/* SECONDARY: START */
+/* #region */
+.button.secondary:not(.icon) {
+  padding: 0.5rem 0.75rem;
+
+  color: var(--theme-color-accent-500);
+  font-size: 0.875rem;
+  font-weight: 500;
+
+  background-color: transparent;
+  border: 1px solid var(--theme-color-accent-500);
+  border-radius: 0.5rem;
+  transition: background-color 150ms ease-in-out;
+}
+
+@media (hover: hover) {
+  .button.secondary:not(.icon):hover {
+    background-color: var(--theme-color-accent-100);
+  }
+}
+/* #endregion */
+/* SECONDARY: END */
+/* ============================================================== */
 /* TOGGLE: START */
 /* #region */
 .button.toggle {
   --size: 1.5rem;
+  --icon-size: 0.75rem;
 
   align-items: center;
   display: flex;
@@ -136,6 +161,25 @@
 
   border-radius: 50%;
   border: 1px solid var(--theme-color-accent-500);
+}
+
+.button.toggle.square {
+  border-radius: 0.25rem;
+}
+
+.button.toggle.sm {
+  --size: 1rem;
+  --icon-size: 0.5rem;
+}
+
+.button.toggle.md {
+  --size: 1.25rem;
+  --icon-size: 0.625rem;
+}
+
+.button.toggle svg {
+  height: var(--icon-size);
+  width: var(--icon-size);
 }
 
 .button.toggle .toggleIndicator {
@@ -152,3 +196,4 @@
 }
 /* #endregion */
 /* TOGGLE: END */
+}

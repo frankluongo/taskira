@@ -1,3 +1,4 @@
+export * from "./IconBell";
 export * from "./IconCalendar";
 export * from "./IconCheckmark";
 export * from "./IconCheckmarkCircle";
@@ -5,5 +6,8 @@ export * from "./IconChevronDown";
 export * from "./IconClipboard";
 export * from "./IconClose";
 export * from "./IconDrag";
+export * from "./IconEdit";
+export * from "./IconGrip";
 export * from "./IconList";
 export * from "./IconPlus";
+export * from "./IconTrash";
