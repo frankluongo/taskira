@@ -1,3 +1,4 @@
+@layer components {
 .link {
   text-decoration: none;
 }
@@ -28,4 +29,5 @@
   .link.navigation:hover {
     color: var(--theme-color-accent-500);
   }
+}
 }

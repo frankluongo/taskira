@@ -12,10 +12,10 @@ import {
   arrayMove,
 } from "@dnd-kit/sortable";
 import { format, addDays } from "date-fns";
-import Layout from "@/components/layout/Layout";
-import { ChoreForm, ChoreItem } from "@/features";
+import { ChoreForm, ChoreItem, Layout } from "@/features";
 import { useStore } from "@/lib/store";
-import { Button, Float, IconPlus, Modal } from "@/base";
+import { Button, Float, IconPlus, List, Modal, Section } from "@/base";
+import css from "./Chores.module.css";
 
 const fmt = (d) => format(d, "yyyy-MM-dd");
 const todayStr = () => fmt(new Date());
@@ -33,6 +33,9 @@ export default function Chores() {
   const today = todayStr();
   const tomorrow = tomorrowStr();
 
+  const overdueChores = chores
+    .filter((e) => e.due_date && e.due_date < today)
+    .sort((a, b) => a.due_date.localeCompare(b.due_date));
   const todayChores = chores
     .filter((e) => e.due_date === today)
     .sort((a, b) => a.sort_order - b.sort_order);
@@ -64,10 +67,10 @@ export default function Chores() {
     <Layout
       title="Chores"
       action={
-        <div className="flex items-center gap-3">
+        <div className={css.actions}>
           <button
             onClick={() => setFilterToday((x) => !x)}
-            className={`text-sm ${filterToday ? "text-indigo-600 dark:text-indigo-400 font-medium" : "text-gray-400 dark:text-gray-500"}`}
+            className={`${css.filterToggle} ${filterToday ? css.active : ""}`}
           >
             Today
           </button>
@@ -89,6 +92,13 @@ export default function Chores() {
         />
       </Modal>
 
+      <ChoreSection
+        title="Overdue"
+        items={overdueChores}
+        sensors={sensors}
+        onDragEnd={(e) => handleDragEnd(overdueChores, e)}
+        showDate
+      />
       <ChoreSection
         title="Today"
         items={todayChores}
@@ -132,10 +142,7 @@ export default function Chores() {
 function ChoreSection({ title, items, sensors, onDragEnd, showDate }) {
   if (items.length === 0) return null;
   return (
-    <section className="mt-6">
-      <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">
-        {title}
-      </h2>
+    <Section title={title}>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -145,20 +152,16 @@ function ChoreSection({ title, items, sensors, onDragEnd, showDate }) {
           items={items.map((e) => e.id)}
           strategy={verticalListSortingStrategy}
         >
-          <div className="divide-y divide-gray-100 dark:divide-gray-800">
+          <List>
             {items.map((chore) => (
               <div key={chore.id}>
-                {showDate && (
-                  <p className="text-xs text-gray-400 pt-2">
-                    {chore.due_date}
-                  </p>
-                )}
+                {showDate && <p className={css.date}>{chore.due_date}</p>}
                 <ChoreItem chore={chore} />
               </div>
             ))}
-          </div>
+          </List>
         </SortableContext>
       </DndContext>
-    </section>
+    </Section>
   );
 }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { Button } from "@/base";
+import { Button, Form, Input } from "@/base";
+import css from "./Login.module.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -25,55 +26,37 @@ export default function Login() {
   }
 
   return (
-    <div className="flex items-center justify-center h-full px-4">
-      <div className="w-full max-w-sm">
-        <h1 className="text-2xl font-semibold mb-6 text-center">Taskira</h1>
+    <div className={css.wrapper}>
+      <div className={css.card}>
+        <h1 className={css.title}>Taskira</h1>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <label
-              htmlFor="email"
-              className="text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
+        <Form onSubmit={handleSubmit}>
+          <Input
+            id="email"
+            label="Email"
+            type="email"
+            autoComplete="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-          <div className="flex flex-col gap-1">
-            <label
-              htmlFor="password"
-              className="text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="border border-gray-300 dark:border-gray-600 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
+          <Input
+            id="password"
+            label="Password"
+            type="password"
+            autoComplete="current-password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-          {error && (
-            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-          )}
+          {error && <p className={css.error}>{error}</p>}
 
           <Button type="submit" disabled={loading} variant="primary">
             {loading ? "Signing in…" : "Sign in"}
           </Button>
-        </form>
+        </Form>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+@layer components {
 .header.page {
   align-items: center;
   display: flex;
@@ -30,4 +31,5 @@
 
 :global(.desktop-app) .header.site * {
   -webkit-app-region: no-drag;
+}
 }

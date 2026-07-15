@@ -41,7 +41,10 @@ export function TaskForm({
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Task name…"
-        className="bg-white dark:bg-gray-800 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+        id="task-name"
+        name="task-name"
+        label="Task name"
+        showLabel={false}
       />
       <FieldsRow>
         <Select

@@ -1,0 +1,10 @@
+@layer components {
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.list > * + * {
+  border-top: 1px solid var(--theme-color-border-500);
+}
+}

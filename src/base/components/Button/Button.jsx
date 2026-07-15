@@ -9,20 +9,32 @@ export function Button({ className = "", variant = "", ...props }) {
   return <button type="button" className={classes} {...props} />;
 }
 
-export function ToggleButton({ onClick, active, ...rest }) {
+export function ToggleButton({
+  onClick,
+  active,
+  variant = "",
+  className = "",
+  ...rest
+}) {
   const [isActive, setIsActive] = useState(active);
-  const classes = [css.button, css.toggle];
+  const variants = variant.split(" ").filter(Boolean);
+  const classes = [
+    css.button,
+    css.toggle,
+    ...variants.map((v) => css[v]),
+    className,
+  ];
   if (isActive) classes.push(css.active);
 
   return (
     <button
       onClick={handleClick}
-      className={classes.join(" ")}
+      className={classes.filter(Boolean).join(" ")}
       type="button"
       {...rest}
     >
       <span className={css.toggleIndicator}>
-        <IconCheckmark height={12} width={12} />
+        <IconCheckmark />
       </span>
     </button>
   );

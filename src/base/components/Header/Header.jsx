@@ -4,5 +4,8 @@ export function Header({ className = "", variant = "", ...props }) {
   const classes = [css.header, ...variants.map((v) => css[v]), className]
     .filter(Boolean)
     .join(" ");
-  return <header className={classes} {...props} />;
+  const dragProps = variants.includes("site")
+    ? { "data-tauri-drag-region": "deep" }
+    : {};
+  return <header className={classes} {...dragProps} {...props} />;
 }

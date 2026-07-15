@@ -1,8 +1,9 @@
 import { Container, Header, Main } from "@/base";
-import { AppNavigation } from "@/features";
+import { AppNavigation } from "../AppNavigation/AppNavigation";
 import { supabase } from "@/lib/supabase";
+import css from "./Layout.module.css";
 
-export default function Layout({ title, action, children }) {
+export function Layout({ title, action, children }) {
   function handleLogout() {
     supabase.auth.signOut();
   }
@@ -10,17 +11,14 @@ export default function Layout({ title, action, children }) {
   return (
     <>
       <Header variant="site">
-        <h1 className="text-xl font-semibold">Taskira</h1>
-        <button
-          onClick={handleLogout}
-          className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
-        >
+        <h1 className={css.siteTitle}>Taskira</h1>
+        <button onClick={handleLogout} className={css.signOut}>
           Sign out
         </button>
       </Header>
       <Main>
         <Header variant="page">
-          <h2 className="text-md font-semibold">{title}</h2>
+          <h2 className={css.pageTitle}>{title}</h2>
           {action && <div>{action}</div>}
         </Header>
         <Container>{children}</Container>
