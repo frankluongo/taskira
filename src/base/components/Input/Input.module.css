@@ -1,31 +1,36 @@
 @layer components {
-.input {
-  min-height: 2.5rem;
-  padding: 0.5rem 0.75rem;
-  width: 100%;
+  .input {
+    min-height: 2.5rem;
+    padding: 0.5rem 0.75rem;
+    width: 100%;
 
-  font-size: 1rem;
+    color: var(--theme-color-text-500);
+    font-size: 1rem;
 
-  appearance: none;
-  background-color: var(--theme-color-background-500);
-  border: 1px solid var(--theme-color-border-500);
-  border-radius: 0.5rem;
-}
+    appearance: none;
+    background-color: var(--theme-color-background-500);
+    border: 1px solid var(--theme-color-border-500);
+    border-radius: 0.5rem;
+  }
 
-.input:focus-visible {
-  outline: 1px solid var(--theme-color-accent-500);
-}
+  .input::placeholder {
+    color: var(--theme-color-text-300);
+  }
 
-.label {
-  font-size: 0.625rem;
-  opacity: 0.5;
-}
+  .input:focus-visible {
+    outline: 1px solid var(--theme-color-accent-500);
+  }
 
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  .label {
+    font-size: 0.625rem;
+    opacity: 0.5;
+  }
 
-  flex: 1;
-}
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    flex: 1;
+  }
 }

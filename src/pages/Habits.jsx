@@ -6,7 +6,8 @@ import { DragContext, HabitForm, HabitItem, Layout } from "@/features";
 import { useStore } from "@/lib/store";
 import {
   Button,
-  Disclosure,
+  Details,
+  FlexColumn,
   Float,
   IconCalendar,
   IconCheckmark,
@@ -25,7 +26,6 @@ export default function Habits() {
   const [showForm, setShowForm] = useState(false);
   const [showCompleted, setShowCompleted] = useState(false);
   const [filterToday, setFilterToday] = useState(true);
-  const [collapsed, setCollapsed] = useState({});
   const [dragMode, setDragMode] = useState(false);
   const todayHabitIds = filterToday
     ? new Set(habitsDueToday().map((h) => h.id))
@@ -66,49 +66,39 @@ export default function Habits() {
         </div>
       }
     >
-      {GROUPS.map((group) => {
-        const allGroupHabits = habits
-          .filter((h) => h.group_name === group)
-          .filter((h) => !filterToday || todayHabitIds.has(h.id))
-          .sort((a, b) => a.sort_order - b.sort_order);
-        if (allGroupHabits.length === 0 && !showForm) return null;
-        const visibleHabits = showCompleted
-          ? allGroupHabits
-          : allGroupHabits.filter((h) => !isHabitDoneToday(h.id));
-        const isCollapsed = collapsed[group];
-        return (
-          <section key={group} className={css.group}>
-            <Disclosure
-              title={group}
-              open={!isCollapsed}
-              onToggle={() =>
-                setCollapsed((prev) => ({ ...prev, [group]: !prev[group] }))
-              }
-            />
-            {!isCollapsed && (
-              <>
-                <DragContext
-                  items={visibleHabits}
-                  onDragEnd={(e) => handleDragEnd(group, e)}
-                >
-                  <List>
-                    {visibleHabits.map((habit) => (
-                      <HabitItem
-                        key={habit.id}
-                        habit={habit}
-                        dragMode={dragMode}
-                      />
-                    ))}
-                  </List>
-                </DragContext>
-                {visibleHabits.length === 0 && (
-                  <p className={css.empty}>All {group} habits done!</p>
-                )}
-              </>
-            )}
-          </section>
-        );
-      })}
+      <FlexColumn>
+        {GROUPS.map((group) => {
+          const allGroupHabits = habits
+            .filter((h) => h.group_name === group)
+            .filter((h) => !filterToday || todayHabitIds.has(h.id))
+            .sort((a, b) => a.sort_order - b.sort_order);
+          if (allGroupHabits.length === 0 && !showForm) return null;
+          const visibleHabits = showCompleted
+            ? allGroupHabits
+            : allGroupHabits.filter((h) => !isHabitDoneToday(h.id));
+          return (
+            <Details key={group} summary={group}>
+              <DragContext
+                items={visibleHabits}
+                onDragEnd={(e) => handleDragEnd(group, e)}
+              >
+                <List>
+                  {visibleHabits.map((habit) => (
+                    <HabitItem
+                      key={habit.id}
+                      habit={habit}
+                      dragMode={dragMode}
+                    />
+                  ))}
+                </List>
+              </DragContext>
+              {visibleHabits.length === 0 && (
+                <p className={css.empty}>All {group} habits done!</p>
+              )}
+            </Details>
+          );
+        })}
+      </FlexColumn>
       <Float>
         <Button
           variant="icon"

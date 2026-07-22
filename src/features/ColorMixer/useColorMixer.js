@@ -17,10 +17,10 @@ export const colorSpacesArray = [
 export function useColorMixer() {
   const [colors, setColors] = useState([]);
   const [mode, setMode] = useState(colorSpacesArray[0]);
-  const [start, setStart] = useState("#000000");
+  const [start, setStart] = useState("");
   const [startPercent, setStartPercent] = useState(100);
   const [endPercent, setEndPercent] = useState(100);
-  const [end, setEnd] = useState("#ffffff");
+  const [end, setEnd] = useState("");
 
   useEffect(() => {
     const rootStyles = window.getComputedStyle(document.documentElement);
@@ -28,6 +28,8 @@ export function useColorMixer() {
       .map(([_, value]) => value)
       .filter((value) => value.startsWith("--color-"));
     setColors(colorStylesArray);
+    setStart(colorStylesArray[0] ?? "");
+    setEnd(colorStylesArray[1] ?? colorStylesArray[0] ?? "");
   }, []);
 
   return {

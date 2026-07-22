@@ -1,0 +1,13 @@
+@layer components {
+  .text {
+    margin: 0;
+  }
+
+  .text.small-title {
+    color: var(--theme-color-text-400);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+}

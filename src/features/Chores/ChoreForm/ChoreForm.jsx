@@ -28,7 +28,10 @@ export function ChoreForm({
   const [recurrence, setRecurrence] = useState(parsed.recurrence);
   const [customInterval, setCustomInterval] = useState(parsed.customInterval);
   const [customUnit, setCustomUnit] = useState(parsed.customUnit);
+  const [repeatFrom, setRepeatFrom] = useState(initialValues.repeat_from ?? "due_date");
   const [alarmTime, setAlarmTime] = useState(initialValues.alarm_time ?? "");
+
+  const showRepeatFrom = ["weekly", "monthly", "yearly", "custom"].includes(recurrence);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -44,6 +47,7 @@ export function ChoreForm({
       list_id: listId || null,
       due_date: dueDate || null,
       recurrence: recurrenceValue,
+      repeat_from: showRepeatFrom ? repeatFrom : "due_date",
       recurrence_day: null,
       alarm_time: alarmTime || null,
     });
@@ -83,12 +87,27 @@ export function ChoreForm({
           label="Recurrence"
         >
           <option value="">No recurrence</option>
+          <option value="daily">Daily</option>
           <option value="weekly">Weekly</option>
           <option value="monthly">Monthly</option>
           <option value="yearly">Yearly</option>
           <option value="custom">Custom…</option>
         </Select>
       </FieldsRow>
+      {showRepeatFrom && (
+        <FieldsRow>
+          <Select
+            value={repeatFrom}
+            onChange={(e) => setRepeatFrom(e.target.value)}
+            id="chore-repeat-from"
+            name="chore-repeat-from"
+            label="Repeat from"
+          >
+            <option value="due_date">Due date</option>
+            <option value="completion_date">Completion date</option>
+          </Select>
+        </FieldsRow>
+      )}
       {recurrence === "custom" && (
         <FieldsRow>
           <Input

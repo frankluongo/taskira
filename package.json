@@ -11,7 +11,8 @@
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build",
-    "deploy": "node scripts/deploy.js"
+    "deploy": "node scripts/deploy.js",
+    "scaffold": "node scripts/scaffold.js"
   },
   "dependencies": {
     "@capacitor/cli": "^8.4.0",

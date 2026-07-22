@@ -8,7 +8,6 @@ const RECURRENCE_OPTIONS = [
   { value: "daily", label: "Daily" },
   { value: "weekdays", label: "Weekdays" },
   { value: "weekends", label: "Weekends" },
-  { value: "every_other_day", label: "Every other day" },
   { value: "specific_days", label: "Specific days" },
 ];
 

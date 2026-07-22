@@ -9,6 +9,7 @@ import { IconBell, IconEdit, IconGrip, IconTrash } from "@/base/icons";
 import css from "./ChoreItem.module.css";
 
 const RECURRENCE_LABELS = {
+  daily: "Daily",
   weekly: "Weekly",
   monthly: "Monthly",
   yearly: "Yearly",

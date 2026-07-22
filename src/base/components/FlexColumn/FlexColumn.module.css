@@ -1,0 +1,23 @@
+@layer components {
+  .flexColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .flexColumn.sm {
+    gap: 0.5rem;
+  }
+
+  .flexColumn.md {
+    gap: 1rem;
+  }
+
+  .flexColumn.lg {
+    gap: 2rem;
+  }
+
+  .flexColumn.xl {
+    gap: 3rem;
+  }
+}

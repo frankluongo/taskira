@@ -1,7 +1,8 @@
 import { getTodayString } from "@/lib/date";
 import { useStore } from "@/lib/store";
-import { List, Section, ToggleButton } from "@/base";
+import { FlexColumn, Heading, List, Section, Text, ToggleButton } from "@/base";
 import { Layout, PriorityBadge } from "@/features";
+import { HABIT_GROUPS } from "@/features/Habits";
 import css from "./Today.module.css";
 
 export default function Today() {
@@ -18,7 +19,7 @@ export default function Today() {
   const habits = habitsDueToday();
   const todayChores = chores.filter((e) => e.due_date === today);
   const todayTasks = tasks
-    .filter((t) => !t.parent_task_id && t.due_date === today)
+    .filter((t) => !t.parent_task_id && !t.completed_at && t.due_date === today)
     .sort((a, b) => b.priority - a.priority);
 
   const hasAnything =
@@ -29,26 +30,33 @@ export default function Today() {
       {!hasAnything && (
         <div className={css.empty}>
           <span className={css.emptyIcon}>✓</span>
-          <p className={css.emptyText}>
-            You&apos;re all caught up for today.
-          </p>
+          <p className={css.emptyText}>You&apos;re all caught up for today.</p>
         </div>
       )}
 
       {habits.length > 0 && (
-        <Section title="Habits">
-          <List>
-            {habits.map((h) => (
-              <div key={h.id} className={css.row}>
-                <ToggleButton onClick={() => completeHabit(h.id)} />
-                <div>
-                  <p className={css.name}>{h.name}</p>
-                  <p className={css.meta}>{h.group_name}</p>
-                </div>
-              </div>
-            ))}
-          </List>
-        </Section>
+        <FlexColumn Tag="section" title="Habits" variant="md">
+          <Heading Tag="h2" variant="h2">
+            Habits
+          </Heading>
+          {HABIT_GROUPS.map((group) => {
+            const groupHabits = habits.filter((h) => h.group_name === group);
+            if (groupHabits.length === 0) return null;
+            return (
+              <FlexColumn key={group} variant="sm">
+                <Text variant="small-title">{group}</Text>
+                <List>
+                  {groupHabits.map((h) => (
+                    <div key={h.id} className={css.row}>
+                      <ToggleButton onClick={() => completeHabit(h.id)} />
+                      <p className={css.name}>{h.name}</p>
+                    </div>
+                  ))}
+                </List>
+              </FlexColumn>
+            );
+          })}
+        </FlexColumn>
       )}
 
       {todayChores.length > 0 && (

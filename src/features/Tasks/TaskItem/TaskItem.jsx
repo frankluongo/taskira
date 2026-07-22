@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useStore, PRIORITY_LABELS } from "@/lib/store";
+import { useStore, PRIORITY_LABELS, INBOX_PROJECT_ID } from "@/lib/store";
 import { formatTime } from "@/lib/date";
 import { TaskForm } from "../TaskForm/TaskForm";
 import { PriorityBadge } from "../PriorityBadge/PriorityBadge";
@@ -9,9 +9,25 @@ import { Button, Modal, ToggleButton } from "@/base";
 import { IconBell, IconEdit, IconGrip, IconTrash } from "@/base/icons";
 import css from "./TaskItem.module.css";
 
+const RECURRENCE_LABELS = {
+  daily: "Daily",
+  weekly: "Weekly",
+  monthly: "Monthly",
+  yearly: "Yearly",
+};
+
+function recurrenceLabel(value) {
+  if (!value) return null;
+  if (RECURRENCE_LABELS[value]) return RECURRENCE_LABELS[value];
+  if (value.startsWith("custom:")) {
+    const [, n, unit] = value.split(":");
+    return `Every ${n} ${unit}`;
+  }
+  return null;
+}
+
 export function TaskItem({ task, subtasks = [] }) {
-  const { completeTask, updateTask, deleteTask, addTask, projects } =
-    useStore();
+  const { completeTask, updateTask, deleteTask, addTask } = useStore();
   const [showEditModal, setShowEditModal] = useState(false);
   const [showSubtaskForm, setShowSubtaskForm] = useState(false);
   const [subtaskName, setSubtaskName] = useState("");
@@ -64,6 +80,9 @@ export function TaskItem({ task, subtasks = [] }) {
           <div className={css.metaRow}>
             <PriorityBadge priority={task.priority} />
             {task.due_date && <span className={css.due}>{task.due_date}</span>}
+            {task.recurrence && (
+              <span className={css.due}>{recurrenceLabel(task.recurrence)}</span>
+            )}
             {task.alarm_time && (
               <span className={css.alarm}>
                 <IconBell />
@@ -150,8 +169,8 @@ export function TaskItem({ task, subtasks = [] }) {
         title="Edit Task"
       >
         <TaskForm
-          projects={projects}
           initialValues={task}
+          allowRecurrence={task.project_id !== INBOX_PROJECT_ID}
           onSubmit={(patch) => {
             updateTask(task.id, patch);
             setShowEditModal(false);

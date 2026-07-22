@@ -1,199 +1,201 @@
 @layer components {
-.button {
-  appearance: none;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  transition:
-    background-color 150ms ease-in-out,
-    border-color 150ms ease-in-out,
-    opacity 150ms ease-in-out;
-}
-/* ============================================================== */
-/* ICON: START */
-/* #region */
-.button.icon {
-  --size: 2.5rem;
-  --icon-size: 1rem;
-
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  height: var(--size);
-  width: var(--size);
-
-  color: var(--theme-color-on-accent);
-
-  background-color: var(--theme-color-accent-500);
-  border-radius: 50%;
-}
-
-.button.icon[aria-pressed="false"] {
-  opacity: 0.5;
-}
-
-.button.icon.secondary {
-  color: var(--theme-color-text-500);
-
-  background-color: var(--theme-color-accent-100);
-  border: 1px solid var(--theme-color-accent-500);
-}
-
-.button.icon.secondary[aria-pressed="true"] {
-  color: var(--theme-color-on-accent);
-
-  background-color: var(--theme-color-accent-500);
-}
-
-.button.icon.slim {
-  --icon-size: 0.75rem;
-  --size: 1.5rem;
-}
-
-@media (hover: hover) {
-  .button.icon {
-    background-color: var(--theme-color-accent-100);
+  .button {
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition:
+      background-color 150ms ease-in-out,
+      border-color 150ms ease-in-out,
+      opacity 150ms ease-in-out;
   }
+  /* ============================================================== */
+  /* ICON: START */
+  /* #region */
+  .button.icon {
+    --size: 2.5rem;
+    --icon-size: 1rem;
 
-  .button.icon:hover {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    height: var(--size);
+    width: var(--size);
+
     color: var(--theme-color-on-accent);
 
     background-color: var(--theme-color-accent-500);
-    opacity: 1;
-  }
-}
-
-.button.icon svg {
-  height: var(--icon-size);
-  width: var(--icon-size);
-
-  transition: transform 150ms ease-in-out;
-}
-
-.button.icon[aria-expanded="true"] svg {
-  transform: rotate(45deg);
-}
-/* #endregion */
-/* ICON: END */
-/* ============================================================== */
-/* PILL: START */
-/* #region */
-.button.pill {
-  padding: 0.25rem 0.5rem;
-
-  font-size: 0.75rem;
-
-  background-color: color-mix(
-    in srgb,
-    var(--color-primary-500) 20%,
-    transparent
-  );
-  border-radius: 9999px;
-}
-
-.button.pill[aria-pressed="true"] {
-  background-color: var(--color-primary-500);
-}
-/* #endregion */
-/* PILL: END */
-/* ============================================================== */
-/* PRIMARY: START */
-/* #region */
-.button.primary {
-  padding: 0.5rem 1rem;
-
-  color: var(--theme-color-on-accent);
-  font-weight: 700;
-
-  background-color: var(--color-primary-500);
-  border: 1px solid var(--color-primary-700);
-  border-radius: 0.5rem;
-}
-
-@media (hover: hover) {
-  .button.primary {
-    background-color: var(--color-primary-600);
+    border-radius: 50%;
   }
 
-  .button.primary:hover {
+  .button.icon[aria-pressed="false"] {
+    opacity: 0.5;
+  }
+
+  .button.icon.secondary {
+    color: var(--theme-color-text-500);
+
+    background-color: var(--theme-color-accent-100);
+    border: 1px solid var(--theme-color-accent-500);
+  }
+
+  .button.icon.secondary[aria-pressed="true"] {
+    color: var(--theme-color-on-accent);
+
     background-color: var(--theme-color-accent-500);
   }
-}
-/* #endregion */
-/* PRIMARY: END */
-/* ============================================================== */
-/* SECONDARY: START */
-/* #region */
-.button.secondary:not(.icon) {
-  padding: 0.5rem 0.75rem;
 
-  color: var(--theme-color-accent-500);
-  font-size: 0.875rem;
-  font-weight: 500;
-
-  background-color: transparent;
-  border: 1px solid var(--theme-color-accent-500);
-  border-radius: 0.5rem;
-  transition: background-color 150ms ease-in-out;
-}
-
-@media (hover: hover) {
-  .button.secondary:not(.icon):hover {
-    background-color: var(--theme-color-accent-100);
+  .button.icon.slim {
+    --icon-size: 0.75rem;
+    --size: 1.5rem;
   }
-}
-/* #endregion */
-/* SECONDARY: END */
-/* ============================================================== */
-/* TOGGLE: START */
-/* #region */
-.button.toggle {
-  --size: 1.5rem;
-  --icon-size: 0.75rem;
 
-  align-items: center;
-  display: flex;
-  height: var(--size);
-  justify-content: center;
-  width: var(--size);
+  @media (hover: hover) {
+    .button.icon {
+      background-color: var(--theme-color-accent-500);
 
-  color: var(--theme-color-on-accent);
+      opacity: 0.75;
+    }
 
-  border-radius: 50%;
-  border: 1px solid var(--theme-color-accent-500);
-}
+    .button.icon:hover {
+      color: var(--theme-color-on-accent);
 
-.button.toggle.square {
-  border-radius: 0.25rem;
-}
+      background-color: var(--theme-color-accent-500);
+      opacity: 1;
+    }
+  }
 
-.button.toggle.sm {
-  --size: 1rem;
-  --icon-size: 0.5rem;
-}
+  .button.icon svg {
+    height: var(--icon-size);
+    width: var(--icon-size);
 
-.button.toggle.md {
-  --size: 1.25rem;
-  --icon-size: 0.625rem;
-}
+    transition: transform 150ms ease-in-out;
+  }
 
-.button.toggle svg {
-  height: var(--icon-size);
-  width: var(--icon-size);
-}
+  .button.icon[aria-expanded="true"] svg {
+    transform: rotate(45deg);
+  }
+  /* #endregion */
+  /* ICON: END */
+  /* ============================================================== */
+  /* PILL: START */
+  /* #region */
+  .button.pill {
+    padding: 0.25rem 0.5rem;
 
-.button.toggle .toggleIndicator {
-  opacity: 0;
-  transition: opacity 150ms ease-in-out;
-}
+    font-size: 0.75rem;
 
-.button.toggle.active {
-  background-color: var(--theme-color-accent-500);
-}
+    background-color: color-mix(
+      in srgb,
+      var(--theme-color-accent-500) 20%,
+      transparent
+    );
+    border-radius: 9999px;
+  }
 
-.button.toggle.active .toggleIndicator {
-  opacity: 1;
-}
-/* #endregion */
-/* TOGGLE: END */
+  .button.pill[aria-pressed="true"] {
+    background-color: var(--theme-color-accent-500);
+  }
+  /* #endregion */
+  /* PILL: END */
+  /* ============================================================== */
+  /* PRIMARY: START */
+  /* #region */
+  .button.primary {
+    padding: 0.5rem 1rem;
+
+    color: var(--theme-color-on-accent);
+    font-weight: 700;
+
+    background-color: var(--theme-color-accent-600);
+    border: 1px solid var(--theme-color-accent-600);
+    border-radius: 0.5rem;
+  }
+
+  @media (hover: hover) {
+    .button.primary {
+      background-color: var(--theme-color-accent-500);
+    }
+
+    .button.primary:hover {
+      background-color: var(--theme-color-accent-500);
+    }
+  }
+  /* #endregion */
+  /* PRIMARY: END */
+  /* ============================================================== */
+  /* SECONDARY: START */
+  /* #region */
+  .button.secondary:not(.icon) {
+    padding: 0.5rem 0.75rem;
+
+    color: var(--theme-color-accent-500);
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    background-color: transparent;
+    border: 1px solid var(--theme-color-accent-500);
+    border-radius: 0.5rem;
+    transition: background-color 150ms ease-in-out;
+  }
+
+  @media (hover: hover) {
+    .button.secondary:not(.icon):hover {
+      background-color: var(--theme-color-accent-100);
+    }
+  }
+  /* #endregion */
+  /* SECONDARY: END */
+  /* ============================================================== */
+  /* TOGGLE: START */
+  /* #region */
+  .button.toggle {
+    --size: 1.5rem;
+    --icon-size: 0.75rem;
+
+    align-items: center;
+    display: flex;
+    height: var(--size);
+    justify-content: center;
+    width: var(--size);
+
+    color: var(--theme-color-on-accent);
+
+    border-radius: 50%;
+    border: 1px solid var(--theme-color-accent-500);
+  }
+
+  .button.toggle.square {
+    border-radius: 0.25rem;
+  }
+
+  .button.toggle.sm {
+    --size: 1rem;
+    --icon-size: 0.5rem;
+  }
+
+  .button.toggle.md {
+    --size: 1.25rem;
+    --icon-size: 0.625rem;
+  }
+
+  .button.toggle svg {
+    height: var(--icon-size);
+    width: var(--icon-size);
+  }
+
+  .button.toggle .toggleIndicator {
+    opacity: 0;
+    transition: opacity 150ms ease-in-out;
+  }
+
+  .button.toggle.active {
+    background-color: var(--theme-color-accent-500);
+  }
+
+  .button.toggle.active .toggleIndicator {
+    opacity: 1;
+  }
+  /* #endregion */
+  /* TOGGLE: END */
 }

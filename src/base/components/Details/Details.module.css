@@ -1,0 +1,62 @@
+@layer components {
+  .chevron {
+    flex-shrink: 0;
+    height: 0.75rem;
+    width: 0.75rem;
+
+    transition: transform 150ms ease-in-out;
+  }
+
+  .details[open] .chevron {
+    transform: rotate(-180deg);
+  }
+
+  .details {
+    appearance: none;
+  }
+
+  .details::details-content {
+    block-size: 0; /* Use block-size (height) for logical properties */
+
+    opacity: 0;
+    overflow: hidden;
+    transition:
+      opacity 0.3s ease,
+      block-size 0.3s ease,
+      content-visibility 0.3s ease allow-discrete;
+  }
+
+  .details[open]::details-content {
+    opacity: 1;
+    block-size: auto;
+  }
+
+  .summary {
+    align-items: center;
+    display: flex;
+    gap: 0.5rem;
+
+    color: var(--theme-color-text-400);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+
+    cursor: pointer;
+    transition: color 150ms ease-in-out;
+  }
+
+  .summary:focus-visible {
+    color: var(--theme-color-accent-500);
+  }
+
+  @media (hover: hover) {
+    .summary:hover {
+      color: var(--theme-color-accent-500);
+    }
+  }
+
+  .summary::marker {
+    display: none;
+  }
+}

@@ -14,7 +14,7 @@ import {
 import { format, addDays } from "date-fns";
 import { ChoreForm, ChoreItem, Layout } from "@/features";
 import { useStore } from "@/lib/store";
-import { Button, Float, IconPlus, List, Modal, Section } from "@/base";
+import { Button, Float, IconPlus, List, Modal, Scroller, Section } from "@/base";
 import css from "./Chores.module.css";
 
 const fmt = (d) => format(d, "yyyy-MM-dd");
@@ -26,6 +26,7 @@ export default function Chores() {
     useStore();
   const [showForm, setShowForm] = useState(false);
   const [filterToday, setFilterToday] = useState(false);
+  const [activeList, setActiveList] = useState("all");
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
   );
@@ -33,21 +34,28 @@ export default function Chores() {
   const today = todayStr();
   const tomorrow = tomorrowStr();
 
+  const byList = (e) => activeList === "all" || e.list_id === activeList;
+
   const overdueChores = chores
-    .filter((e) => e.due_date && e.due_date < today)
+    .filter((e) => e.due_date && e.due_date < today && e.recurrence !== "daily")
+    .filter(byList)
     .sort((a, b) => a.due_date.localeCompare(b.due_date));
   const todayChores = chores
     .filter((e) => e.due_date === today)
+    .filter(byList)
     .sort((a, b) => a.sort_order - b.sort_order);
   const tomorrowChores = chores
     .filter((e) => e.due_date === tomorrow)
+    .filter(byList)
     .sort((a, b) => a.sort_order - b.sort_order);
   const laterChores = chores
     .filter((e) => e.due_date && e.due_date > tomorrow)
+    .filter(byList)
     .sort((a, b) => a.due_date.localeCompare(b.due_date))
     .slice(0, 5);
   const somedayChores = chores
     .filter((e) => !e.due_date)
+    .filter(byList)
     .sort((a, b) => (a.created_at > b.created_at ? 1 : -1));
 
   function handleDragEnd(subset, { active, over }) {
@@ -91,6 +99,27 @@ export default function Chores() {
           onAddList={addChoreList}
         />
       </Modal>
+
+      {chore_lists.length > 0 && (
+        <Scroller style={{ flex: "0 0 auto" }}>
+          <li>
+            <ListTab
+              label="All"
+              active={activeList === "all"}
+              onClick={() => setActiveList("all")}
+            />
+          </li>
+          {chore_lists.map((l) => (
+            <li key={l.id}>
+              <ListTab
+                label={l.name}
+                active={activeList === l.id}
+                onClick={() => setActiveList(l.id)}
+              />
+            </li>
+          ))}
+        </Scroller>
+      )}
 
       <ChoreSection
         title="Overdue"
@@ -136,6 +165,14 @@ export default function Chores() {
         </Button>
       </Float>
     </Layout>
+  );
+}
+
+function ListTab({ label, active, onClick }) {
+  return (
+    <Button variant="pill" aria-pressed={active} onClick={onClick}>
+      {label}
+    </Button>
   );
 }
 

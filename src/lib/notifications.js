@@ -20,7 +20,7 @@ function nextHabitOccurrence(habit) {
     candidate.setHours(h, m, 0, 0)
     if (candidate <= now) continue
     const dow = candidate.getDay()
-    if (habit.recurrence === 'daily' || habit.recurrence === 'every_other_day') return candidate
+    if (habit.recurrence === 'daily') return candidate
     if (habit.recurrence === 'weekdays' && dow >= 1 && dow <= 5) return candidate
     if (habit.recurrence === 'weekends' && (dow === 0 || dow === 6)) return candidate
     if (habit.recurrence === 'specific_days' && habit.recurrence_days?.includes(dow)) return candidate
@@ -107,7 +107,7 @@ export async function rescheduleAllHabitNotifications(habits) {
 
 export async function scheduleTaskNotification(task) {
   if (!Capacitor.isNativePlatform()) return
-  if (!task.due_date || !task.alarm_time) return
+  if (task.completed_at || !task.due_date || !task.alarm_time) return
   const at = new Date(`${task.due_date}T${task.alarm_time}`)
   if (at <= new Date()) return
   const { display } = await LocalNotifications.checkPermissions()
@@ -132,7 +132,7 @@ export async function rescheduleAllTaskNotifications(tasks) {
 
   const now = new Date()
   const toSchedule = tasks
-    .filter((t) => t.due_date && t.alarm_time)
+    .filter((t) => !t.completed_at && t.due_date && t.alarm_time)
     .map((t) => ({ task: t, at: new Date(`${t.due_date}T${t.alarm_time}`) }))
     .filter(({ at }) => at > now)
     .map(({ task, at }) => ({ id: notifId(task.id), title: 'Task Reminder', body: task.name, schedule: { at } }))

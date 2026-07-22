@@ -5,6 +5,9 @@ import Habits from "@/pages/Habits";
 import Chores from "@/pages/Chores";
 import KitchenSink from "@/pages/KitchenSink";
 import Tasks from "@/pages/Tasks";
+import Projects from "@/pages/Projects";
+import Checklists from "@/pages/Checklists";
+import ChecklistDetail from "@/pages/ChecklistDetail";
 import Login from "@/pages/Login";
 import { useStore } from "@/lib/store";
 import { AuthProvider, useAuth } from "@/lib/auth";
@@ -86,6 +89,30 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <Tasks />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/projects"
+        element={
+          <ProtectedRoute>
+            <Projects />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/checklists"
+        element={
+          <ProtectedRoute>
+            <Checklists />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/checklists/:id"
+        element={
+          <ProtectedRoute>
+            <ChecklistDetail />
           </ProtectedRoute>
         }
       />

@@ -3,7 +3,9 @@ import {
   Hyperlink,
   IconCalendar,
   IconCheckmarkCircle,
+  IconChecklist,
   IconClipboard,
+  IconFolder,
   IconList,
   Navigation,
 } from "@/base";
@@ -13,6 +15,8 @@ const tabs = [
   { to: "/habits", label: "Habits", icon: IconCheckmarkCircle },
   { to: "/chores", label: "Chores", icon: IconList },
   { to: "/tasks", label: "Tasks", icon: IconClipboard },
+  { to: "/projects", label: "Projects", icon: IconFolder },
+  { to: "/checklists", label: "Checklists", icon: IconChecklist },
 ];
 
 export function AppNavigation() {

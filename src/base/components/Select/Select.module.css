@@ -1,46 +1,47 @@
 @layer components {
-.icon {
-  height: 0.75rem;
+  .icon {
+    height: 0.75rem;
 
-  position: absolute;
-  top: 50%;
-  right: 0.75rem;
-  transform: translateY(-50%);
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    transform: translateY(-50%);
 
-  pointer-events: none;
-}
+    pointer-events: none;
+  }
 
-.label {
-  font-size: 0.625rem;
-  opacity: 0.5;
-}
+  .label {
+    font-size: 0.625rem;
+    opacity: 0.5;
+  }
 
-.select {
-  min-height: 2.5rem;
-  padding: 0.5rem 0.75rem;
-  width: 100%;
+  .select {
+    min-height: 2.5rem;
+    padding: 0.5rem 0.75rem;
+    width: 100%;
 
-  font-size: 0.875rem;
+    color: var(--theme-color-text-500);
+    font-size: 0.875rem;
 
-  appearance: none;
-  background-color: var(--theme-color-background-500);
-  border: 1px solid var(--theme-color-border-500);
-  border-radius: 0.5rem;
-}
+    appearance: none;
+    background-color: var(--theme-color-background-500);
+    border: 1px solid var(--theme-color-border-500);
+    border-radius: 0.5rem;
+  }
 
-.select:focus-visible {
-  outline: 1px solid var(--theme-color-accent-500);
-}
+  .select:focus-visible {
+    outline: 1px solid var(--theme-color-accent-500);
+  }
 
-.selectWrapper {
-  position: relative;
-}
+  .selectWrapper {
+    position: relative;
+  }
 
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
 
-  flex: 1;
-}
+    flex: 1;
+  }
 }

@@ -11,7 +11,6 @@ import css from "./HabitItem.module.css";
 
 const RECURRENCE_LABELS = {
   daily: "Daily",
-  every_other_day: "Every other day",
   weekdays: "Weekdays",
   weekends: "Weekends",
   specific_days: "Specific days",
