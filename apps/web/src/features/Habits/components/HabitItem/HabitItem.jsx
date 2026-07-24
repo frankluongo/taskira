@@ -4,8 +4,8 @@ import { CSS } from "@dnd-kit/utilities";
 import { useStore } from "@/lib/store";
 import { formatTime } from "@/lib/date";
 import { HabitForm } from "../HabitForm/HabitForm";
-import { Button, Modal, ToggleButton } from "@/base/components";
-import { IconBell, IconEdit, IconGrip, IconTrash } from "@/base/icons";
+import { Button, Modal, ToggleButton } from "@taskira/ui/components";
+import { IconBell, IconEdit, IconGrip, IconTrash } from "@taskira/ui/icons";
 
 import css from "./HabitItem.module.css";
 

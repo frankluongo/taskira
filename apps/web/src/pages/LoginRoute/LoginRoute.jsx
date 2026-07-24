@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Navigate } from "react-router";
 import { supabase } from "@/lib/supabase";
-import { Button, Form, Input } from "@/base";
+import { Button, Form, Input } from "@taskira/ui";
 import css from "./LoginRoute.module.css";
 
 export function LoginRoute() {

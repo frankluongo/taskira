@@ -2,7 +2,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@taskira/ui": ["../../packages/ui/src/index.js"],
+      "@taskira/ui/components": ["../../packages/ui/src/components/index.js"],
+      "@taskira/ui/icons": ["../../packages/ui/src/icons/index.js"]
     }
   }
 }

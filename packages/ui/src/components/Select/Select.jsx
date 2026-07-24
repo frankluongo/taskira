@@ -1,4 +1,4 @@
-import { IconChevronDown } from "@/base/icons";
+import { IconChevronDown } from "../../icons";
 import css from "./Select.module.css";
 
 export function Select({ id, label, showLabel = true, ...rest }) {

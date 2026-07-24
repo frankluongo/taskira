@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { INBOX_PROJECT_ID } from "@/lib/store";
-import { Button, FieldsRow, Form, Input, Select } from "@/base";
+import { Button, FieldsRow, Form, Input, Select } from "@taskira/ui";
 
 function parseRecurrence(value) {
   if (!value)

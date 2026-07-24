@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useStore } from "@/lib/store";
 import { usePageHeader } from "@/features";
-import { Button, Float, IconPlus, IconTrash, List, Modal, Input, Form } from "@/base";
+import { Button, Float, IconPlus, IconTrash, List, Modal, Input, Form } from "@taskira/ui";
 import css from "./Checklists.module.css";
 
 export default function Checklists() {

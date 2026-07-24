@@ -1,5 +1,5 @@
 import css from "./Details.module.css";
-import { IconChevronDown } from "@/base/icons";
+import { IconChevronDown } from "../../icons";
 
 export function Details({
   children,

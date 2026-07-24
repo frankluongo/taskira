@@ -25,7 +25,7 @@ import {
   IconGrip,
   IconPlus,
   IconTrash,
-} from "@/base";
+} from "@taskira/ui";
 import css from "./ChecklistDetailRoute.module.css";
 
 function containerKey(sectionId) {

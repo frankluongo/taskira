@@ -1,6 +1,6 @@
 import { useState } from "react";
 import css from "./Button.module.css";
-import { IconCheckmark } from "@/base/icons";
+import { IconCheckmark } from "../../icons";
 export function Button({ className = "", variant = "", ...props }) {
   const variants = variant.split(" ").filter(Boolean);
   const classes = [css.button, ...variants.map((v) => css[v]), className]

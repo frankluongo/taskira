@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import css from "./Modal.module.css";
 import { Button } from "..";
-import { IconClose } from "@/base/icons";
+import { IconClose } from "../../icons";
 
 export function Modal({ open, onClose, children, title }) {
   const ref = useRef(null);

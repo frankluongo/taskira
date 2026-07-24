@@ -5,8 +5,8 @@ import { useStore, PRIORITY_LABELS, INBOX_PROJECT_ID } from "@/lib/store";
 import { formatTime } from "@/lib/date";
 import { TaskForm } from "../TaskForm/TaskForm";
 import { PriorityBadge } from "../PriorityBadge/PriorityBadge";
-import { Button, Modal, ToggleButton } from "@/base";
-import { IconBell, IconEdit, IconGrip, IconTrash } from "@/base/icons";
+import { Button, Modal, ToggleButton } from "@taskira/ui";
+import { IconBell, IconEdit, IconGrip, IconTrash } from "@taskira/ui/icons";
 import css from "./TaskItem.module.css";
 
 const RECURRENCE_LABELS = {

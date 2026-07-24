@@ -14,7 +14,7 @@ import {
 import { format, addDays } from "date-fns";
 import { ChoreForm, ChoreItem, usePageHeader } from "@/features";
 import { useStore } from "@/lib/store";
-import { Button, Float, IconPlus, List, Modal, Scroller, Section } from "@/base";
+import { Button, Float, IconPlus, List, Modal, Scroller, Section } from "@taskira/ui";
 import css from "./Chores.module.css";
 
 const fmt = (d) => format(d, "yyyy-MM-dd");

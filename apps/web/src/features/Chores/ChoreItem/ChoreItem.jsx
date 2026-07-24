@@ -4,8 +4,8 @@ import { CSS } from "@dnd-kit/utilities";
 import { useStore } from "@/lib/store";
 import { formatTime } from "@/lib/date";
 import { ChoreForm } from "../ChoreForm/ChoreForm";
-import { Button, Modal, ToggleButton } from "@/base";
-import { IconBell, IconEdit, IconGrip, IconTrash } from "@/base/icons";
+import { Button, Modal, ToggleButton } from "@taskira/ui";
+import { IconBell, IconEdit, IconGrip, IconTrash } from "@taskira/ui/icons";
 import css from "./ChoreItem.module.css";
 
 const RECURRENCE_LABELS = {

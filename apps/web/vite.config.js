@@ -9,5 +9,9 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+    // Keep the default (false): resolving @taskira/ui to its real path in
+    // packages/ui (not the node_modules symlink) is what lets
+    // @vitejs/plugin-react's Fast Refresh pick up its .jsx files at all.
+    preserveSymlinks: false,
   },
 })

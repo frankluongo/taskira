@@ -1,4 +1,4 @@
-import { IconChevronDown } from "@/base/icons";
+import { IconChevronDown } from "../../icons";
 import css from "./Disclosure.module.css";
 
 export function Disclosure({ title, open, onToggle }) {

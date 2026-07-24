@@ -7,8 +7,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
 const TYPES = {
   component: {
-    dir: ['src', 'base', 'components'],
-    indexPath: ['src', 'base', 'components', 'index.js'],
+    dir: ['packages', 'ui', 'src', 'components'],
+    indexPath: ['packages', 'ui', 'src', 'components', 'index.js'],
     layer: 'components',
     jsx: (name, baseClass) => `import css from "./${name}.module.css";
 
@@ -22,8 +22,8 @@ export function ${name}({ className = "", variant = "", ...props }) {
 `,
   },
   feature: {
-    dir: ['src', 'features'],
-    indexPath: ['src', 'features', 'index.js'],
+    dir: ['apps', 'web', 'src', 'features'],
+    indexPath: ['apps', 'web', 'src', 'features', 'index.js'],
     layer: 'features',
     jsx: (name, baseClass) => `import css from "./${name}.module.css";
 
@@ -33,8 +33,8 @@ export function ${name}() {
 `,
   },
   page: {
-    dir: ['src', 'pages'],
-    indexPath: ['src', 'pages', 'index.js'],
+    dir: ['apps', 'web', 'src', 'pages'],
+    indexPath: ['apps', 'web', 'src', 'pages', 'index.js'],
     layer: 'features',
     jsx: (name, baseClass) => `import css from "./${name}.module.css";
 

@@ -11,7 +11,7 @@ import {
   IconPlus,
   List,
   Modal,
-} from "@/base";
+} from "@taskira/ui";
 import css from "./Tasks.module.css";
 
 export default function Tasks() {
