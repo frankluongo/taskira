@@ -30,6 +30,7 @@ jobs:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.VITE_SUPABASE_PUBLISHABLE_KEY }}
         with:
+          projectPath: apps/tauri
           tagName: ${{ github.ref_name }}
           releaseName: 'Taskira ${{ github.ref_name }}'
           releaseDraft: false

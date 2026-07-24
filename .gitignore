@@ -19,6 +19,7 @@ yarn.lock
 dist/
 build/
 .next/
+storybook-static/
 
 # Logs
 logs/
@@ -33,12 +34,12 @@ temp/
 *.tmp
 
 # iOS / Capacitor
-ios/App/Pods/
-ios/App/App.xcodeproj/xcuserdata/
-ios/App/App.xcodeproj/project.xcworkspace/xcuserdata/
-ios/App/DerivedData/
-ios/App/build/
-ios/App/debug.xcconfig
+apps/ios/ios/App/Pods/
+apps/ios/ios/App/App.xcodeproj/xcuserdata/
+apps/ios/ios/App/App.xcodeproj/project.xcworkspace/xcuserdata/
+apps/ios/ios/App/DerivedData/
+apps/ios/ios/App/build/
+apps/ios/ios/debug.xcconfig
 
 # Additional env files (.env.production, .env.staging, etc.)
 .env.*

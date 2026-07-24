@@ -40,12 +40,12 @@ run(`npm version ${bumpType} --no-git-tag-version`)
 const pkgPath = path.join(root, 'package.json')
 const version = JSON.parse(readFileSync(pkgPath, 'utf8')).version
 
-const tauriConfPath = path.join(root, 'src-tauri', 'tauri.conf.json')
+const tauriConfPath = path.join(root, 'apps', 'tauri', 'src-tauri', 'tauri.conf.json')
 const tauriConf = JSON.parse(readFileSync(tauriConfPath, 'utf8'))
 tauriConf.version = version
 writeFileSync(tauriConfPath, JSON.stringify(tauriConf, null, 2) + '\n')
 
-run('git add package.json package-lock.json src-tauri/tauri.conf.json')
+run('git add package.json package-lock.json apps/tauri/src-tauri/tauri.conf.json')
 run(`git commit -m "chore: release v${version}"`)
 run(`git tag v${version}`)
 run('git push origin main')
