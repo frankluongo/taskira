@@ -10,6 +10,25 @@ npm run dev          # web-only, in the browser
 npm run tauri:dev    # desktop app, hot-reloading
 ```
 
+## Scaffolding
+
+```
+npm run scaffold ComponentName            # base component (default type)
+npm run scaffold component ComponentName
+npm run scaffold feature FeatureName
+npm run scaffold page PageName
+```
+
+Generates a new folder with a JSX file, a companion CSS module, and an entry added to the relevant barrel `index.js` (kept alphabetized):
+
+| Type        | Location                            | Barrel                        |
+| ----------- | ------------------------------------ | ------------------------------ |
+| `component` | `src/base/components/<Name>/`        | `src/base/components/index.js` |
+| `feature`   | `src/features/<Name>/`               | `src/features/index.js`        |
+| `page`      | `src/pages/<Name>/`                  | `src/pages/index.js`           |
+
+Components get `className`/`variant` prop handling built in, since they're the design-system primitives other code composes. Features and pages get a plain component stub. Names must be PascalCase, and the command refuses to overwrite an existing directory.
+
 ## Building locally
 
 ```

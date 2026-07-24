@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ColorMixer, Layout } from "@/features";
+import { usePageHeader } from "@/features";
 import {
   Button,
   Disclosure,
@@ -91,20 +91,20 @@ export default function KitchenSink() {
     };
   }, [theme]);
 
+  usePageHeader({
+    title: "Kitchen Sink",
+    action: (
+      <Button
+        variant="secondary"
+        onClick={() => setTheme((mode) => (mode === "dark" ? "light" : "dark"))}
+      >
+        Switch to {theme === "dark" ? "Light" : "Dark"}
+      </Button>
+    ),
+  });
+
   return (
-    <Layout
-      title="Kitchen Sink"
-      action={
-        <Button
-          variant="secondary"
-          onClick={() =>
-            setTheme((mode) => (mode === "dark" ? "light" : "dark"))
-          }
-        >
-          Switch to {theme === "dark" ? "Light" : "Dark"}
-        </Button>
-      }
-    >
+    <>
       <Section title="Theme Colors">
         <div className={css.swatchGrid}>
           {THEME_TOKENS.map((token) => (
@@ -162,7 +162,11 @@ export default function KitchenSink() {
           <Button variant="icon" aria-label="Add">
             <IconPlus />
           </Button>
-          <Button variant="icon" aria-pressed="false" aria-label="Add, inactive">
+          <Button
+            variant="icon"
+            aria-pressed="false"
+            aria-label="Add, inactive"
+          >
             <IconPlus />
           </Button>
           <Button variant="icon secondary" aria-label="Edit">
@@ -263,10 +267,6 @@ export default function KitchenSink() {
           ))}
         </div>
       </Section>
-
-      <Section title="Color Mixer">
-        <ColorMixer />
-      </Section>
-    </Layout>
+    </>
   );
 }

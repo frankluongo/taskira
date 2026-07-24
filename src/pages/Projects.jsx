@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
-import { DragContext, TaskItem, TaskForm, Layout } from "@/features";
+import { DragContext, TaskItem, TaskForm, usePageHeader } from "@/features";
 import { useStore, INBOX_PROJECT_ID } from "@/lib/store";
 import {
   Button,
@@ -83,21 +83,23 @@ export default function Projects() {
     setActiveProject("all");
   }
 
+  usePageHeader({
+    title: "Projects",
+    action: (
+      <Button
+        aria-label="Toggle show archived"
+        aria-pressed={showArchived}
+        onClick={() => setShowArchived((x) => !x)}
+        variant="icon slim secondary"
+        title="Toggle show archived"
+      >
+        <IconCheckmark />
+      </Button>
+    ),
+  });
+
   return (
-    <Layout
-      title="Projects"
-      action={
-        <Button
-          aria-label="Toggle show archived"
-          aria-pressed={showArchived}
-          onClick={() => setShowArchived((x) => !x)}
-          variant="icon slim secondary"
-          title="Toggle show archived"
-        >
-          <IconCheckmark />
-        </Button>
-      }
-    >
+    <>
       <Scroller style={{ flex: "0 0 auto" }}>
         <li>
           <ProjectTab
@@ -201,7 +203,7 @@ export default function Projects() {
           </Float>
         </>
       )}
-    </Layout>
+    </>
   );
 }
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router";
 import {
   DndContext,
   closestCenter,
@@ -17,9 +17,16 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useStore } from "@/lib/store";
-import { Layout } from "@/features";
-import { Button, IconCheckmark, IconEdit, IconGrip, IconPlus, IconTrash } from "@/base";
-import css from "./ChecklistDetail.module.css";
+import { usePageHeader } from "@/features";
+import {
+  Button,
+  IconCheckmark,
+  IconEdit,
+  IconGrip,
+  IconPlus,
+  IconTrash,
+} from "@/base";
+import css from "./ChecklistDetailRoute.module.css";
 
 function containerKey(sectionId) {
   return `container:${sectionId ?? "ungrouped"}`;
@@ -30,7 +37,7 @@ function sectionIdFromContainerKey(key) {
   return raw === "ungrouped" ? null : raw;
 }
 
-export default function ChecklistDetail() {
+export function ChecklistDetailRoute() {
   const { id } = useParams();
   const navigate = useNavigate();
   const {
@@ -65,12 +72,43 @@ export default function ChecklistDetail() {
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
   );
 
+  usePageHeader(
+    checklist
+      ? {
+          title: checklist.name,
+          action: (
+            <div className={css.actions}>
+              <Button
+                variant="secondary"
+                onClick={() => navigate("/checklists")}
+              >
+                Back
+              </Button>
+              <Button
+                aria-pressed={editing}
+                onClick={() => setMode(editing ? "check" : "edit")}
+                variant="icon slim secondary"
+                title={
+                  editing ? "Switch to check-off mode" : "Switch to edit mode"
+                }
+              >
+                <IconEdit />
+              </Button>
+              <Button
+                onClick={() => resetChecklist(id)}
+                variant="icon slim secondary"
+                title="Reset (uncheck all)"
+              >
+                <IconCheckmark />
+              </Button>
+            </div>
+          ),
+        }
+      : { title: "Checklist" },
+  );
+
   if (!checklist) {
-    return (
-      <Layout title="Checklist">
-        <p className={css.empty}>Checklist not found.</p>
-      </Layout>
-    );
+    return <p className={css.empty}>Checklist not found.</p>;
   }
 
   function itemsForSection(sectionId) {
@@ -99,7 +137,7 @@ export default function ChecklistDetail() {
     const overIsContainer = String(over.id).startsWith("container:");
     const targetSectionId = overIsContainer
       ? sectionIdFromContainerKey(over.id)
-      : items.find((i) => i.id === over.id)?.section_id ?? null;
+      : (items.find((i) => i.id === over.id)?.section_id ?? null);
 
     const sourceKey = containerKey(activeItem.section_id);
     const targetKey = containerKey(targetSectionId);
@@ -113,10 +151,9 @@ export default function ChecklistDetail() {
     const targetList =
       sourceKey === targetKey
         ? sourceList
-        : (
-            targetSectionId
-              ? itemsForSection(targetSectionId)
-              : ungroupedItems
+        : (targetSectionId
+            ? itemsForSection(targetSectionId)
+            : ungroupedItems
           ).filter((i) => i.id !== active.id);
 
     let insertIdx = targetList.length;
@@ -126,11 +163,19 @@ export default function ChecklistDetail() {
     }
 
     const newTargetList = [...targetList];
-    newTargetList.splice(insertIdx, 0, { ...activeItem, section_id: targetSectionId });
+    newTargetList.splice(insertIdx, 0, {
+      ...activeItem,
+      section_id: targetSectionId,
+    });
 
-    const touched = sourceKey === targetKey ? [newTargetList] : [sourceList, newTargetList];
+    const touched =
+      sourceKey === targetKey ? [newTargetList] : [sourceList, newTargetList];
     const orderedPatches = touched.flatMap((list) =>
-      list.map((i, idx) => ({ id: i.id, section_id: i.section_id ?? null, sort_order: idx })),
+      list.map((i, idx) => ({
+        id: i.id,
+        section_id: i.section_id ?? null,
+        sort_order: idx,
+      })),
     );
 
     reorderItems(orderedPatches);
@@ -142,31 +187,7 @@ export default function ChecklistDetail() {
   }
 
   return (
-    <Layout
-      title={checklist.name}
-      action={
-        <div className={css.actions}>
-          <Button variant="secondary" onClick={() => navigate("/checklists")}>
-            Back
-          </Button>
-          <Button
-            aria-pressed={editing}
-            onClick={() => setMode(editing ? "check" : "edit")}
-            variant="icon slim secondary"
-            title={editing ? "Switch to check-off mode" : "Switch to edit mode"}
-          >
-            <IconEdit />
-          </Button>
-          <Button
-            onClick={() => resetChecklist(id)}
-            variant="icon slim secondary"
-            title="Reset (uncheck all)"
-          >
-            <IconCheckmark />
-          </Button>
-        </div>
-      }
-    >
+    <>
       {editing && sections.length > 1 && (
         <DndContext
           sensors={sensors}
@@ -218,7 +239,11 @@ export default function ChecklistDetail() {
                   </Button>
                   <Button
                     onClick={() => {
-                      if (confirm(`Delete "${section.name}"? Items will be ungrouped.`))
+                      if (
+                        confirm(
+                          `Delete "${section.name}"? Items will be ungrouped.`,
+                        )
+                      )
                         deleteSection(section.id);
                     }}
                     variant="icon secondary slim"
@@ -242,30 +267,54 @@ export default function ChecklistDetail() {
       </DndContext>
 
       {editing && (
-        <Button variant="secondary" onClick={handleAddSection} className={css.addSection}>
+        <Button
+          variant="secondary"
+          onClick={handleAddSection}
+          className={css.addSection}
+        >
           <IconPlus /> Section
         </Button>
       )}
-    </Layout>
+    </>
   );
 }
 
 function SectionChip({ section }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id: section.id });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: section.id });
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.4 : 1,
   };
   return (
-    <button ref={setNodeRef} style={style} {...attributes} {...listeners} className={css.chip}>
+    <button
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className={css.chip}
+    >
       {section.name}
     </button>
   );
 }
 
-function ItemContainer({ containerId, items, editing, onToggle, onRename, onDelete, onAdd }) {
+function ItemContainer({
+  containerId,
+  items,
+  editing,
+  onToggle,
+  onRename,
+  onDelete,
+  onAdd,
+}) {
   const { setNodeRef } = useDroppable({ id: containerId });
   const [showAdd, setShowAdd] = useState(false);
   const [newName, setNewName] = useState("");
@@ -281,7 +330,10 @@ function ItemContainer({ containerId, items, editing, onToggle, onRename, onDele
 
   return (
     <div ref={setNodeRef} className={css.itemContainer}>
-      <SortableContext items={items.map((i) => i.id)} strategy={verticalListSortingStrategy}>
+      <SortableContext
+        items={items.map((i) => i.id)}
+        strategy={verticalListSortingStrategy}
+      >
         {items.map((item) => (
           <ChecklistItemRow
             key={item.id}
@@ -310,7 +362,11 @@ function ItemContainer({ containerId, items, editing, onToggle, onRename, onDele
           <button type="submit" className={css.addItemSubmit}>
             Add
           </button>
-          <button type="button" onClick={() => setShowAdd(false)} className={css.addItemCancel}>
+          <button
+            type="button"
+            onClick={() => setShowAdd(false)}
+            className={css.addItemCancel}
+          >
             Cancel
           </button>
         </form>
@@ -320,8 +376,14 @@ function ItemContainer({ containerId, items, editing, onToggle, onRename, onDele
 }
 
 function ChecklistItemRow({ item, editing, onToggle, onRename, onDelete }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
-    useSortable({ id: item.id });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: item.id });
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,

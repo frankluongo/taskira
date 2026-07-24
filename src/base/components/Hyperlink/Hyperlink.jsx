@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 import css from "./Hyperlink.module.css";
 
 export function Hyperlink({ variant = "", ...rest }) {

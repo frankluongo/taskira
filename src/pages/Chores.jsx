@@ -12,7 +12,7 @@ import {
   arrayMove,
 } from "@dnd-kit/sortable";
 import { format, addDays } from "date-fns";
-import { ChoreForm, ChoreItem, Layout } from "@/features";
+import { ChoreForm, ChoreItem, usePageHeader } from "@/features";
 import { useStore } from "@/lib/store";
 import { Button, Float, IconPlus, List, Modal, Scroller, Section } from "@/base";
 import css from "./Chores.module.css";
@@ -71,20 +71,22 @@ export default function Chores() {
     );
   }
 
+  usePageHeader({
+    title: "Chores",
+    action: (
+      <div className={css.actions}>
+        <button
+          onClick={() => setFilterToday((x) => !x)}
+          className={`${css.filterToggle} ${filterToday ? css.active : ""}`}
+        >
+          Today
+        </button>
+      </div>
+    ),
+  });
+
   return (
-    <Layout
-      title="Chores"
-      action={
-        <div className={css.actions}>
-          <button
-            onClick={() => setFilterToday((x) => !x)}
-            className={`${css.filterToggle} ${filterToday ? css.active : ""}`}
-          >
-            Today
-          </button>
-        </div>
-      }
-    >
+    <>
       <Modal
         open={showForm}
         onClose={() => setShowForm(false)}
@@ -164,7 +166,7 @@ export default function Chores() {
           <IconPlus />
         </Button>
       </Float>
-    </Layout>
+    </>
   );
 }
 

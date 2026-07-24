@@ -1,7 +1,7 @@
 import { getTodayString } from "@/lib/date";
 import { useStore } from "@/lib/store";
 import { FlexColumn, Heading, List, Section, Text, ToggleButton } from "@/base";
-import { Layout, PriorityBadge } from "@/features";
+import { PriorityBadge, usePageHeader } from "@/features";
 import { HABIT_GROUPS } from "@/features/Habits";
 import css from "./Today.module.css";
 
@@ -25,8 +25,10 @@ export default function Today() {
   const hasAnything =
     habits.length + todayChores.length + todayTasks.length > 0;
 
+  usePageHeader({ title: getTodayString("EEEE, MMM d") });
+
   return (
-    <Layout title={getTodayString("EEEE, MMM d")}>
+    <>
       {!hasAnything && (
         <div className={css.empty}>
           <span className={css.emptyIcon}>✓</span>
@@ -90,6 +92,6 @@ export default function Today() {
           </List>
         </Section>
       )}
-    </Layout>
+    </>
   );
 }

@@ -1,29 +1,17 @@
 import { useState } from "react";
+import { Navigate } from "react-router";
 import { supabase } from "@/lib/supabase";
 import { Button, Form, Input } from "@/base";
-import css from "./Login.module.css";
+import css from "./LoginRoute.module.css";
 
-export default function Login() {
+export function LoginRoute() {
+  const { user } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      setError(error.message);
-      setLoading(false);
-    }
-  }
+  if (user) return <Navigate to="/" replace />;
 
   return (
     <div className={css.wrapper}>
@@ -60,4 +48,20 @@ export default function Login() {
       </div>
     </div>
   );
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+    }
+  }
 }

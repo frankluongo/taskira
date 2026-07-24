@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 import { getTodayString } from "@/lib/date";
-import { DragContext, TaskItem, TaskForm, Layout } from "@/features";
+import { DragContext, TaskItem, TaskForm, usePageHeader } from "@/features";
 import { useStore, INBOX_PROJECT_ID } from "@/lib/store";
 import {
   Button,
@@ -41,32 +41,34 @@ export default function Tasks() {
     setShowAddModal(false);
   }
 
+  usePageHeader({
+    title: "Tasks",
+    action: (
+      <div className={css.actions}>
+        <Button
+          aria-label="Toggle filter today"
+          aria-pressed={filterToday}
+          onClick={() => setFilterToday((x) => !x)}
+          variant="icon slim secondary"
+          title="Toggle today filter"
+        >
+          <IconCalendar />
+        </Button>
+        <Button
+          aria-label="Toggle drag mode"
+          aria-pressed={dragMode}
+          onClick={() => setDragMode((x) => !x)}
+          variant="icon slim secondary"
+          title="Toggle drag mode"
+        >
+          <IconDrag />
+        </Button>
+      </div>
+    ),
+  });
+
   return (
-    <Layout
-      title="Tasks"
-      action={
-        <div className={css.actions}>
-          <Button
-            aria-label="Toggle filter today"
-            aria-pressed={filterToday}
-            onClick={() => setFilterToday((x) => !x)}
-            variant="icon slim secondary"
-            title="Toggle today filter"
-          >
-            <IconCalendar />
-          </Button>
-          <Button
-            aria-label="Toggle drag mode"
-            aria-pressed={dragMode}
-            onClick={() => setDragMode((x) => !x)}
-            variant="icon slim secondary"
-            title="Toggle drag mode"
-          >
-            <IconDrag />
-          </Button>
-        </div>
-      }
-    >
+    <>
       <DragContext items={topLevelTasks} onDragEnd={handleDragEnd}>
         <List>
           {topLevelTasks.map((task) => (
@@ -105,6 +107,6 @@ export default function Tasks() {
           <IconPlus />
         </Button>
       </Float>
-    </Layout>
+    </>
   );
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useStore } from "@/lib/store";
-import { Layout } from "@/features";
+import { usePageHeader } from "@/features";
 import { Button, Float, IconPlus, IconTrash, List, Modal, Input, Form } from "@/base";
 import css from "./Checklists.module.css";
 
@@ -29,8 +29,10 @@ export default function Checklists() {
     if (confirm("Delete this checklist?")) deleteChecklist(id);
   }
 
+  usePageHeader({ title: "Checklists" });
+
   return (
-    <Layout title="Checklists">
+    <>
       <List>
         {sorted.map((c) => {
           const itemCount = checklist_items.filter(
@@ -94,6 +96,6 @@ export default function Checklists() {
           <IconPlus />
         </Button>
       </Float>
-    </Layout>
+    </>
   );
 }

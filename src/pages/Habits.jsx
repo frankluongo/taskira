@@ -1,14 +1,17 @@
 import { useState } from "react";
 import { arrayMove } from "@dnd-kit/sortable";
 
-import { DragContext, HabitForm, HabitItem, Layout } from "@/features";
+import { DragContext, HabitForm, HabitItem, usePageHeader } from "@/features";
 
 import { useStore } from "@/lib/store";
 import {
   Button,
+  Container,
   Details,
   FlexColumn,
   Float,
+  Header,
+  Heading,
   IconCalendar,
   IconCheckmark,
   IconDrag,
@@ -32,9 +35,9 @@ export default function Habits() {
     : null;
 
   return (
-    <Layout
-      title="Habits"
-      action={
+    <FlexColumn>
+      <Header variant="page">
+        <Heading>Habits</Heading>
         <div className={css.actions}>
           <Button
             aria-label="Toggle filter today"
@@ -64,65 +67,63 @@ export default function Habits() {
             <IconDrag />
           </Button>
         </div>
-      }
-    >
-      <FlexColumn>
-        {GROUPS.map((group) => {
-          const allGroupHabits = habits
-            .filter((h) => h.group_name === group)
-            .filter((h) => !filterToday || todayHabitIds.has(h.id))
-            .sort((a, b) => a.sort_order - b.sort_order);
-          if (allGroupHabits.length === 0 && !showForm) return null;
-          const visibleHabits = showCompleted
-            ? allGroupHabits
-            : allGroupHabits.filter((h) => !isHabitDoneToday(h.id));
-          return (
-            <Details key={group} summary={group}>
-              <DragContext
-                items={visibleHabits}
-                onDragEnd={(e) => handleDragEnd(group, e)}
-              >
-                <List>
-                  {visibleHabits.map((habit) => (
-                    <HabitItem
-                      key={habit.id}
-                      habit={habit}
-                      dragMode={dragMode}
-                    />
-                  ))}
-                </List>
-              </DragContext>
-              {visibleHabits.length === 0 && (
-                <p className={css.empty}>All {group} habits done!</p>
-              )}
-            </Details>
-          );
-        })}
-      </FlexColumn>
-      <Float>
-        <Button
-          variant="icon"
-          aria-expanded={showForm}
-          aria-label="Add Habit"
-          onClick={() => setShowForm((x) => !x)}
+      </Header>
+      <Container>
+        <FlexColumn>
+          {GROUPS.map((group) => {
+            const allGroupHabits = habits
+              .filter((h) => h.group_name === group)
+              .filter((h) => !filterToday || todayHabitIds.has(h.id))
+              .sort((a, b) => a.sort_order - b.sort_order);
+            if (allGroupHabits.length === 0 && !showForm) return null;
+            const visibleHabits = showCompleted
+              ? allGroupHabits
+              : allGroupHabits.filter((h) => !isHabitDoneToday(h.id));
+            return (
+              <Details key={group} summary={group}>
+                <DragContext
+                  items={visibleHabits}
+                  onDragEnd={(e) => handleDragEnd(group, e)}
+                >
+                  <List>
+                    {visibleHabits.map((habit) => (
+                      <HabitItem
+                        key={habit.id}
+                        habit={habit}
+                        dragMode={dragMode}
+                      />
+                    ))}
+                  </List>
+                </DragContext>
+              </Details>
+            );
+          })}
+        </FlexColumn>
+        <Float>
+          <Button
+            variant="icon"
+            aria-expanded={showForm}
+            aria-label="Add Habit"
+            onClick={() => setShowForm((x) => !x)}
+          >
+            <IconPlus />
+          </Button>
+        </Float>
+        <Modal
+          open={showForm}
+          onClose={() => setShowForm(false)}
+          title="Add Habit"
         >
-          <IconPlus />
-        </Button>
-      </Float>
-      <Modal
-        open={showForm}
-        onClose={() => setShowForm(false)}
-        title="Add Habit"
-      >
-        <HabitForm
-          onSubmit={(habit) => {
-            addHabit(habit);
-            setShowForm(false);
-          }}
-          submitLabel="Add Habit"
-        />
-      </Modal>
-    </Layout>
+          <HabitForm
+            onSubmit={(habit) => {
+              addHabit(habit);
+              setShowForm(false);
+            }}
+            submitLabel="Add Habit"
+          />
+        </Modal>
+      </Container>
+    </FlexColumn>
   );
 
   function handleDragEnd(group, { active, over }) {
